@@ -1,0 +1,4 @@
+*.pp
+*.obj
+*~
+.DS_Store
