@@ -44,6 +44,7 @@
  */
 #include <ti/sysbios/knl/Semaphore.h>
 #include <ti/sysbios/knl/Queue.h>
+#include <ti/sysbios/knl/Mailbox.h>
 
 #include "gatt.h"
 #include "gattservapp.h"
@@ -100,6 +101,12 @@
 /*********************************************************************
  * EXTERNAL VARIABLES
  */
+
+//Motion Data Mailbox
+//extern Mailbox_Handle motionMailbox;
+extern float gyroX, gyroY, gyroZ;
+extern float accelX, accelY, accelZ;
+extern float magX, magY, magZ;
 
 /*********************************************************************
  * EXTERNAL FUNCTIONS
@@ -290,11 +297,24 @@ void PMLDotMov_processSensorEvent(void)
         }
         if (mpuConfig & MOV_WOM_ENABLE)
         {
-//          nActivity--;
+          nActivity--;
         }
 
         // Send data
         Movement_setParameter(SENSOR_DATA, SENSOR_DATA_LEN, sensorData);
+#ifdef FEATURE_AHRS
+        gyroX = sensorMpu9250GyroConvert((int16_t *)&sensorData[0]);
+        gyroY = sensorMpu9250GyroConvert((int16_t *)&sensorData[2]);
+        gyroZ = sensorMpu9250GyroConvert((int16_t *)&sensorData[4]);
+        accelX = sensorMpu9250AccConvert((int16_t *)&sensorData[6]);
+        accelY = sensorMpu9250AccConvert((int16_t *)&sensorData[8]);
+        accelZ = sensorMpu9250AccConvert((int16_t *)&sensorData[10]);
+        magX = (1.0) * *((int16_t *)&sensorData[12]);
+		magY = (1.0) * *((int16_t *)&sensorData[14]);
+		magZ = (1.0) * *((int16_t *)&sensorData[16]);
+
+//        Mailbox_post(motionMailbox, sensorData, BIOS_NO_WAIT);
+#endif
       }
       else
       {
@@ -487,6 +507,9 @@ static void appStateSet(uint8_t newState)
 
     sensorMpu9250PowerOn();
     sensorMpu9250Enable(mpuConfig & 0xFF);
+    sensorMpu9250GyroSetFilter(CONFIG_DLPF_184HZ);
+    sensorMpu9250AccSetFilter(ACCEL_CONF_2_184HZ);
+
 
     if (newState == APP_STATE_ACTIVE)
     {

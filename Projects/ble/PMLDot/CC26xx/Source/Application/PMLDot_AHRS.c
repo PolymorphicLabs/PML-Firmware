@@ -312,10 +312,10 @@ static void sensorTaskFxn(UArg a0, UArg a1)
       //TODO: Calculate AHRS Data
 //      Mailbox_pend(motionMailbox, )
       //Convert to radians/s
-      gyroX = gyroX * (PI / 180);
-      gyroY = gyroY * (PI / 180);
-      gyroZ = gyroZ * (PI / 180);
-      MadgwickAHRSupdate(gyroX, gyroY, gyroZ, accelX, accelY, accelZ, magX, magY, magZ);
+//      gyroX = gyroX * (PI / 180);
+//      gyroY = gyroY * (PI / 180);
+//      gyroZ = gyroZ * (PI / 180);
+//      MadgwickAHRSupdate(gyroX, gyroY, gyroZ, accelX, accelY, accelZ, magX, magY, magZ);
 
       // 3. Send data
       AHRS_setParameter( SENSOR_DATA, SENSOR_DATA_LEN, (void *)&qData);

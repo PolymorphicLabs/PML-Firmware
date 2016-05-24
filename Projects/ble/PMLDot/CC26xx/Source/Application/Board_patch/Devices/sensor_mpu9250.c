@@ -76,6 +76,7 @@
 #define LP_ACCEL_ODR                  0x1E // R/W
 #define WOM_THR                       0x1F // R/W
 #define FIFO_EN                       0x23 // R/W
+#define I2C_MST_CTRL     			  0x24
 
 // .. registers 0x24 - 0x36 are not applicable to the PMLDot HW configuration
 
@@ -109,6 +110,12 @@
 #define FIFO_COUNT_L                  0x73 // R/W
 #define FIFO_R_W                      0x74 // R/W
 #define WHO_AM_I                      0x75 // R/W
+#define XA_OFFSET_H      			  0x77
+#define XA_OFFSET_L     			  0x78
+#define YA_OFFSET_H      			  0x7A
+#define YA_OFFSET_L     			  0x7B
+#define ZA_OFFSET_H      			  0x7D
+#define ZA_OFFSET_L      			  0x7E
 
 // Masks is mpuConfig valiable
 #define ACC_CONFIG_MASK               0x38
@@ -125,6 +132,15 @@
 
 // Data sizes
 #define DATA_SIZE                     6
+
+
+
+//Gyro Config
+#define GYRO_CONFIG_FCHOICE			  0x03
+
+
+
+
 
 // Output data rates
 #define INV_LPA_0_3125HZ              0
@@ -195,6 +211,9 @@
 #define MFS_14BITS                    0     // 0.6 mG per LSB
 #define MFS_16BITS                    1     // 0.15 mG per LSB
 
+
+#define PI 3.141592F
+
 // Sensor selection/de-selection
 #define SENSOR_SELECT()               bspI2cSelect(BSP_I2C_INTERFACE_1,SENSOR_I2C_ADDRESS)
 #define SENSOR_SELECT_MAG()           bspI2cSelect(BSP_I2C_INTERFACE_1,SENSOR_MAG_I2_ADDRESS)
@@ -229,9 +248,13 @@ static bool sensorMpu9250SetBypass(void);
 static uint8_t mpuConfig;
 static uint8_t magStatus;
 static uint8_t accRange;
+static uint8_t accBandwidth;
 static uint8_t gyroRange;
+static uint8_t gyroBandwidth;
 static uint8_t accRangeReg;
+static uint8_t accBandwidthReg;
 static uint8_t gyroRangeReg;
+static uint8_t gyroBandwidthReg;
 static uint8_t val;
 
 // Magnetometer calibration
@@ -257,6 +280,8 @@ static float scale_z = 1;
 static int16_t gyro_off_x = -170;
 static int16_t gyro_off_y = 90;
 static int16_t gyro_off_z = 115;
+
+float gyroBias[3] = {0, 0, 0}, accelBias[3] = {0, 0, 0};
 
 bool calOnline = 0;
 
@@ -392,6 +417,9 @@ bool sensorMpu9250Reset(void)
   ret = sensorMpu9250Test();
   if (ret)
   {
+	  //TODO:Perform calibration
+//	  sensorMpu9250Calibrate(gyroBias, accelBias);
+
     // Initial configuration
     sensorMpu9250AccSetRange(ACC_RANGE_16G);
     sensorMpu9250GyroSetRange(GYRO_RANGE_2000);
@@ -403,6 +431,208 @@ bool sensorMpu9250Reset(void)
 
   return ret;
 }
+
+// Function which accumulates gyro and accelerometer data after device initialization. It calculates the average
+// of the at-rest readings and then loads the resulting offsets into accelerometer and gyro bias registers.
+//void sensorMpu9250Calibrate(float * dest1, float * dest2)
+//{
+//  uint8_t data[12]; // data array to hold accelerometer and gyro x, y, z, data
+//  uint16_t ii, packet_count, fifo_count;
+//  int32_t gyro_bias[3]  = {0, 0, 0}, accel_bias[3] = {0, 0, 0};
+//  uint8_t val;
+//
+//  if (!SENSOR_SELECT())
+//  {
+//    return;
+//  }
+//
+//  // Device reset
+//  val = 0x80;
+//  sensorWriteReg(PWR_MGMT_1, &val, 1);
+//  SENSOR_DESELECT();
+//  delay_ms(100);
+//
+// // get stable time source; Auto select clock source to be PLL gyroscope reference if ready
+// // else use the internal oscillator, bits 2:0 = 001
+//  if (!SENSOR_SELECT())
+//  {
+//    return;
+//  }
+//  val = 0x01;
+//  sensorWriteReg(PWR_MGMT_1, &val, 1);
+//  val = 0x00;
+//  sensorWriteReg(PWR_MGMT_2, &val, 1);
+//  SENSOR_DESELECT();
+//  delay_ms(200);
+//
+//// Configure device for bias calculation
+//  if (!SENSOR_SELECT())
+//  {
+//    return;
+//  }
+//  val = 0x00;
+//  sensorWriteReg(INT_ENABLE, &val, 1);// Disable all interrupts
+//  sensorWriteReg(FIFO_EN, &val, 1);// Disable FIFO
+//  sensorWriteReg(PWR_MGMT_1, &val, 1);// Turn on internal clock source
+//  sensorWriteReg(I2C_MST_CTRL, &val, 1);// Disable I2C master
+//  sensorWriteReg(USER_CTRL, &val, 1);// Disable FIFO and I2C master modes
+//  val = 0x0C;
+//  sensorWriteReg(USER_CTRL, &val, 1);// Reset FIFO and DMP
+//  SENSOR_DESELECT();
+//  delay_ms(15);
+//
+//// Configure MPU6050 gyro and accelerometer for bias calculation
+//  if (!SENSOR_SELECT())
+//  {
+//    return;
+//  }
+//  val = 0x01;
+//  sensorWriteReg(CONFIG, &val, 1);// Set low-pass filter to 188 Hz
+//  val = 0x00;
+//  sensorWriteReg(SMPLRT_DIV, &val, 1);// Set sample rate to 1 kHz
+//  sensorWriteReg(GYRO_CONFIG, &val, 1);// Set gyro full-scale to 250 degrees per second, maximum sensitivity
+//  sensorWriteReg(ACCEL_CONFIG, &val, 1);// Set accelerometer full-scale to 2 g, maximum sensitivity
+//
+//  uint16_t  gyrosensitivity  = 131;   // = 131 LSB/degrees/sec
+//  uint16_t  accelsensitivity = 16384;  // = 16384 LSB/g
+//
+//    // Configure FIFO to capture accelerometer and gyro data for bias calculation
+//  val = 0x40;
+//  sensorWriteReg(USER_CTRL, &val, 1);// Enable FIFO
+//  val = 0x78;
+//  sensorWriteReg(FIFO_EN, &val, 1);// Enable gyro and accelerometer sensors for FIFO  (max size 512 bytes in MPU-9150)
+//  SENSOR_DESELECT();
+//  delay_ms(40); // accumulate 40 samples in 40 milliseconds = 480 bytes
+//
+//// At end of sample accumulation, turn off FIFO sensor read
+//  if (!SENSOR_SELECT())
+//  {
+//    return;
+//  }
+//  val = 0x00;
+//  sensorWriteReg(FIFO_EN, &val, 1);// Disable gyro and accelerometer sensors for FIFO
+//  sensorReadReg(FIFO_COUNT_H, &data[0], 2);// read FIFO sample count
+//  fifo_count = ((uint16_t)data[0] << 8) | data[1];
+//  packet_count = fifo_count/12;// How many sets of full gyro and accelerometer data for averaging
+//
+//  for (ii = 0; ii < packet_count; ii++) {
+//    int16_t accel_temp[3] = {0, 0, 0}, gyro_temp[3] = {0, 0, 0};
+//    sensorReadReg(FIFO_R_W, &data[0], 12);// read data for averaging
+//    accel_temp[0] = (int16_t) (((int16_t)data[0] << 8) | data[1]  ) ;  // Form signed 16-bit integer for each sample in FIFO
+//    accel_temp[1] = (int16_t) (((int16_t)data[2] << 8) | data[3]  ) ;
+//    accel_temp[2] = (int16_t) (((int16_t)data[4] << 8) | data[5]  ) ;
+//    gyro_temp[0]  = (int16_t) (((int16_t)data[6] << 8) | data[7]  ) ;
+//    gyro_temp[1]  = (int16_t) (((int16_t)data[8] << 8) | data[9]  ) ;
+//    gyro_temp[2]  = (int16_t) (((int16_t)data[10] << 8) | data[11]) ;
+//
+//    accel_bias[0] += (int32_t) accel_temp[0]; // Sum individual signed 16-bit biases to get accumulated signed 32-bit biases
+//    accel_bias[1] += (int32_t) accel_temp[1];
+//    accel_bias[2] += (int32_t) accel_temp[2];
+//    gyro_bias[0]  += (int32_t) gyro_temp[0];
+//    gyro_bias[1]  += (int32_t) gyro_temp[1];
+//    gyro_bias[2]  += (int32_t) gyro_temp[2];
+//
+//  }
+//
+//  SENSOR_DESELECT();
+//    accel_bias[0] /= (int32_t) packet_count; // Normalize sums to get average count biases
+//    accel_bias[1] /= (int32_t) packet_count;
+//    accel_bias[2] /= (int32_t) packet_count;
+//    gyro_bias[0]  /= (int32_t) packet_count;
+//    gyro_bias[1]  /= (int32_t) packet_count;
+//    gyro_bias[2]  /= (int32_t) packet_count;
+//
+//  if(accel_bias[2] > 0L) {accel_bias[2] -= (int32_t) accelsensitivity;}  // Remove gravity from the z-axis accelerometer bias calculation
+//  else {accel_bias[2] += (int32_t) accelsensitivity;}
+//
+//// Construct the gyro biases for push to the hardware gyro bias registers, which are reset to zero upon device startup
+//  data[0] = (-gyro_bias[0]/4  >> 8) & 0xFF; // Divide by 4 to get 32.9 LSB per deg/s to conform to expected bias input format
+//  data[1] = (-gyro_bias[0]/4)       & 0xFF; // Biases are additive, so change sign on calculated average gyro biases
+//  data[2] = (-gyro_bias[1]/4  >> 8) & 0xFF;
+//  data[3] = (-gyro_bias[1]/4)       & 0xFF;
+//  data[4] = (-gyro_bias[2]/4  >> 8) & 0xFF;
+//  data[5] = (-gyro_bias[2]/4)       & 0xFF;
+//
+//// Push gyro biases to hardware registers
+//  if (!SENSOR_SELECT())
+//  {
+//    return;
+//  }
+//  sensorWriteReg(XG_OFFSET_H, &data[0], 1);
+//  sensorWriteReg(XG_OFFSET_L, &data[1], 1);
+//  sensorWriteReg(YG_OFFSET_H, &data[2], 1);
+//  sensorWriteReg(YG_OFFSET_L, &data[3], 1);
+//  sensorWriteReg(ZG_OFFSET_H, &data[4], 1);
+//  sensorWriteReg(ZG_OFFSET_L, &data[5], 1);
+//
+//  SENSOR_DESELECT();
+//
+//// Output scaled gyro biases for display in the main program
+//  dest1[0] = (float) gyro_bias[0]/(float) gyrosensitivity;
+//  dest1[1] = (float) gyro_bias[1]/(float) gyrosensitivity;
+//  dest1[2] = (float) gyro_bias[2]/(float) gyrosensitivity;
+//
+//// Construct the accelerometer biases for push to the hardware accelerometer bias registers. These registers contain
+//// factory trim values which must be added to the calculated accelerometer biases; on boot up these registers will hold
+//// non-zero values. In addition, bit 0 of the lower byte must be preserved since it is used for temperature
+//// compensation calculations. Accelerometer bias registers expect bias input as 2048 LSB per g, so that
+//// the accelerometer biases calculated above must be divided by 8.
+//  if (!SENSOR_SELECT())
+//  {
+//    return;
+//  }
+//  int32_t accel_bias_reg[3] = {0, 0, 0}; // A place to hold the factory accelerometer trim biases
+//  sensorReadReg(XA_OFFSET_H, &data[0], 2);// Read factory accelerometer trim values
+//  accel_bias_reg[0] = (int32_t) (((int16_t)data[0] << 8) | data[1]);
+//  sensorReadReg(YA_OFFSET_H, &data[0], 2);
+//  accel_bias_reg[1] = (int32_t) (((int16_t)data[0] << 8) | data[1]);
+//  sensorReadReg(ZA_OFFSET_H, &data[0], 2);
+//  accel_bias_reg[2] = (int32_t) (((int16_t)data[0] << 8) | data[1]);
+//
+//  SENSOR_DESELECT();
+//
+//  uint32_t mask = 1uL; // Define mask for temperature compensation bit 0 of lower byte of accelerometer bias registers
+//  uint8_t mask_bit[3] = {0, 0, 0}; // Define array to hold mask bit for each accelerometer bias axis
+//
+//  for(ii = 0; ii < 3; ii++) {
+//    if((accel_bias_reg[ii] & mask)) mask_bit[ii] = 0x01; // If temperature compensation bit is set, record that fact in mask_bit
+//  }
+//
+//  // Construct total accelerometer bias, including calculated average accelerometer bias from above
+//  accel_bias_reg[0] -= (accel_bias[0]/8); // Subtract calculated averaged accelerometer bias scaled to 2048 LSB/g (16 g full scale)
+//  accel_bias_reg[1] -= (accel_bias[1]/8);
+//  accel_bias_reg[2] -= (accel_bias[2]/8);
+//
+//  data[0] = (accel_bias_reg[0] >> 8) & 0xFF;
+//  data[1] = (accel_bias_reg[0])      & 0xFF;
+//  data[1] = data[1] | mask_bit[0]; // preserve temperature compensation bit when writing back to accelerometer bias registers
+//  data[2] = (accel_bias_reg[1] >> 8) & 0xFF;
+//  data[3] = (accel_bias_reg[1])      & 0xFF;
+//  data[3] = data[3] | mask_bit[1]; // preserve temperature compensation bit when writing back to accelerometer bias registers
+//  data[4] = (accel_bias_reg[2] >> 8) & 0xFF;
+//  data[5] = (accel_bias_reg[2])      & 0xFF;
+//  data[5] = data[5] | mask_bit[2]; // preserve temperature compensation bit when writing back to accelerometer bias registers
+//
+//// Apparently this is not working for the acceleration biases in the MPU-9250
+//// Are we handling the temperature correction bit properly?
+//// Push accelerometer biases to hardware registers
+//  if (!SENSOR_SELECT())
+//  {
+//    return;
+//  }
+//  sensorWriteReg(XA_OFFSET_H, &data[0], 1);
+//  sensorWriteReg(XA_OFFSET_L, &data[1], 1);
+//  sensorWriteReg(YA_OFFSET_H, &data[2], 1);
+//  sensorWriteReg(YA_OFFSET_L, &data[3], 1);
+//  sensorWriteReg(ZA_OFFSET_H, &data[4], 1);
+//  sensorWriteReg(ZA_OFFSET_L, &data[5], 1);
+//  SENSOR_DESELECT();
+//
+//// Output scaled accelerometer biases for display in the main program
+//   dest2[0] = (float)accel_bias[0]/(float)accelsensitivity;
+//   dest2[1] = (float)accel_bias[1]/(float)accelsensitivity;
+//   dest2[2] = (float)accel_bias[2]/(float)accelsensitivity;
+//}
 
 
 /*******************************************************************************
@@ -533,6 +763,46 @@ void sensorMpu9250Enable(uint16_t axes)
 
 
 /*******************************************************************************
+* @fn          sensorMpu9250AccSetFilter
+*
+* @brief       Set the DLPF of the accelerometer
+*
+* @param       newRange: ACCEL_CONF_2_460HZ, ACCEL_CONF_2_184HZ, ACCEL_CONF_2_92HZ, ACCEL_CONF_2_41HZ, ACCEL_CONF_2_20HZ, ACCEL_CONF_2_10HZ, ACCEL_CONF_2_5HZ
+*
+* @return      true if write succeeded
+*/
+bool sensorMpu9250AccSetFilter(uint8_t bandwidth)
+{
+  bool success;
+
+  if (bandwidth == accBandwidth)
+  {
+    return true;
+  }
+
+  ST_ASSERT(sensorMpu9250PowerIsOn());
+
+  if (!SENSOR_SELECT())
+  {
+    return false;
+  }
+
+  accBandwidthReg = bandwidth & ~(ACCEL_CONF_2_FCHOICE);
+
+  // Apply the range
+  success = sensorWriteReg(ACCEL_CONFIG_2, &accBandwidthReg, 1);
+  SENSOR_DESELECT();
+
+  if (success)
+  {
+    accBandwidth = bandwidth;
+  }
+
+  return success;
+}
+
+
+/*******************************************************************************
 * @fn          sensorMpu9250AccSetRange
 *
 * @brief       Set the range of the accelerometer
@@ -625,6 +895,58 @@ bool sensorMpu9250AccRead(uint16_t *data )
   {
     convertToLe((uint8_t*)data,DATA_SIZE);
   }
+
+  return success;
+}
+
+/*******************************************************************************
+* @fn          sensorMpu9250GyroSetFilter
+*
+* @brief       Set the DLPF of the gyroscope
+*
+* @param       bandwidth: CONFIG_DLPF_250HZ, CONFIG_DLPF_184HZ, CONFIG_DLPF_92HZ, CONFIG_DLPF_41HZ, CONFIG_DLPF_20HZ, CONFIG_DLPF_10HZ, CONFIG_DLPF_5HZ
+*
+* @return      true if write succeeded
+*/
+bool sensorMpu9250GyroSetFilter(uint8_t bandwidth)
+{
+  bool success;
+  uint8_t fchoice;
+
+  if (bandwidth == gyroBandwidth)
+  {
+    return true;
+  }
+
+  ST_ASSERT(sensorMpu9250PowerIsOn());
+
+  if (!SENSOR_SELECT())
+  {
+    return false;
+  }
+
+  gyroBandwidthReg = (bandwidth & CONFIG_DLPF_CONF);
+
+  // Apply the range
+  success = sensorWriteReg(CONFIG, &gyroBandwidthReg, 1);
+  SENSOR_DESELECT();
+
+  if (success)
+  {
+	  gyroBandwidth = bandwidth;
+  }
+
+  //Set Fchoice
+  fchoice = 0;
+
+  if (!SENSOR_SELECT())
+  {
+    return false;
+  }
+
+  success = sensorWriteReg(GYRO_CONFIG, &fchoice, 1);
+  SENSOR_DESELECT();
+
 
   return success;
 }
@@ -827,15 +1149,15 @@ float sensorMpu9250GyroConvert(int16_t *data)
   //-- calculate rotation, unit deg/s
 	switch(gyroRange){
 	case GYRO_RANGE_250:
-		return (*data * 1.0) / (65536 / 500);
+		return (*data * 1.0) / (65536 / 500) * (PI / 180);
 	case GYRO_RANGE_500:
-		return (*data * 1.0) / (65536 / 1000);
+		return (*data * 1.0) / (65536 / 1000) * (PI / 180);
 	case GYRO_RANGE_1000:
-		return (*data * 1.0) / (65536 / 2000);
+		return (*data * 1.0) / (65536 / 2000)* (PI / 180);
 	case GYRO_RANGE_2000:
-		return (*data * 1.0) / (65536 / 4000);
+		return (*data * 1.0) / (65536 / 4000)* (PI / 180);
 	default:
-		return (*data * 1.0) / (65536 / 500);
+		return (*data * 1.0) / (65536 / 500)* (PI / 180);
 	}
 
 }
@@ -1244,10 +1566,16 @@ uint8_t sensorMpu9250MagRead(int16_t *data)
         {
 
           // Data from magnetometer isn't aligned to other sensors so swizzle axis to correct.
+//Aligned to MPU axis
+//          data[1] = ((int16_t)rawData[1] << 8) | rawData[0];  // Turn the MSB and LSB into a signed 16-bit value - Swap X and Y
+//          data[0] = ((int16_t)rawData[3] << 8) | rawData[2];  // Data stored as little Endian - Swap X and Y
+//          data[2] = (-1) * (((int16_t)rawData[5] << 8) | rawData[4]);  // Invert Z to align
 
-          data[1] = ((int16_t)rawData[1] << 8) | rawData[0];  // Turn the MSB and LSB into a signed 16-bit value - Swap X and Y
-          data[0] = ((int16_t)rawData[3] << 8) | rawData[2];  // Data stored as little Endian - Swap X and Y
-          data[2] = (-1) * (((int16_t)rawData[5] << 8) | rawData[4]);  // Invert Z to align
+
+//aligned to paraglider app axis
+		  data[0] = ((int16_t)rawData[1] << 8) | rawData[0];  // Turn the MSB and LSB into a signed 16-bit value - Swap X and Y
+		  data[1] = ((int16_t)rawData[3] << 8) | rawData[2];  // Data stored as little Endian - Swap X and Y
+		  data[2] = ((int16_t)rawData[5] << 8) | rawData[4];
 
           // Sensitivity adjustment
           data[1] = data[1] * calX >> 8;

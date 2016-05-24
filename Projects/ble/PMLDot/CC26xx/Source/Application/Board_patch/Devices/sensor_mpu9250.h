@@ -53,6 +53,26 @@ extern "C" {
  *                                          Constants
  * -----------------------------------------------------------------------------
  */
+//Accel config 2
+#define ACCEL_CONF_2_FCHOICE		  0X08
+#define ACCEL_CONF_2_460HZ			  0X00
+#define ACCEL_CONF_2_184HZ			  0X01
+#define ACCEL_CONF_2_92HZ			  0X02
+#define ACCEL_CONF_2_41HZ			  0X03
+#define ACCEL_CONF_2_20HZ			  0X04
+#define ACCEL_CONF_2_10HZ			  0X05
+#define ACCEL_CONF_2_5HZ			  0X06
+
+//Gyro DLPF
+#define CONFIG_DLPF_CONF			  0x07
+#define CONFIG_DLPF_250HZ			  0X00
+#define CONFIG_DLPF_184HZ			  0X01
+#define CONFIG_DLPF_92HZ 			  0X02
+#define CONFIG_DLPF_41HZ			  0X03
+#define CONFIG_DLPF_20HZ			  0X04
+#define CONFIG_DLPF_10HZ			  0X05
+#define CONFIG_DLPF_5HZ			      0X06
+
 // Accelerometer ranges
 #define ACC_RANGE_2G      0
 #define ACC_RANGE_4G      1
@@ -106,13 +126,16 @@ void sensorMpu9250PowerOff(void);
 bool sensorMpu9250PowerIsOn(void);
 
 void sensorMpu9250Enable(uint16_t config);
+void sensorMpu9250Calibrate(float * dest1, float * dest2);
 bool sensorMpu9250WomEnable(uint8_t threshold);
 
+bool sensorMpu9250AccSetFilter(uint8_t bandwidth);
 bool sensorMpu9250AccSetRange(uint8_t range);
 uint8_t sensorMpu9250AccReadRange(void);
 bool sensorMpu9250AccRead(uint16_t *rawData);
 float sensorMpu9250AccConvert(int16_t *rawValue);
 
+bool sensorMpu9250GyroSetFilter(uint8_t bandwidth);
 bool sensorMpu9250GyroSetRange(uint8_t newRange);
 void sensorMpu9250GyroCalSet(int16_t *data );
 void sensorMpu9250GyroCal(int16_t *data );

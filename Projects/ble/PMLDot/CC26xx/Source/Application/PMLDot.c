@@ -405,20 +405,6 @@ static void PMLDot_init(void)
 {
   uint8_t selfTestMap;
 
-	float gx = 3.141592F / 2;
-	float gy = 0.0F;
-	float gz = 0.0F;
-	float ax = -1.0F;
-	float ay = 0.0F;
-	float az = 0.0F;
-	float mx = -1.0F;
-	float my = 2.0F;
-	float mz = 3.0F;
-
-	MadgwickAHRSinit();
-
-	MadgwickAHRSupdate(gx, gy, gz, ax, ay, az, mx, my, mz);
-
   // Setup I2C for sensors
   bspI2cInit();
 
@@ -960,9 +946,11 @@ static void PMLDot_processCharValueChangeEvt(uint8_t serviceID,
     PMLDotTmp_processCharChangeEvt(paramID);
     break;
 
+#ifdef FEATURE_AHRS
   case SERVICE_ID_AHRS:
     PMLDotAHRS_processCharChangeEvt(paramID);
     break;
+#endif
 
   case SERVICE_ID_BAR:
     PMLDotBar_processCharChangeEvt(paramID);
@@ -971,10 +959,6 @@ static void PMLDot_processCharValueChangeEvt(uint8_t serviceID,
   case SERVICE_ID_MOV:
     PMLDotMov_processCharChangeEvt(paramID);
     break;
-
-//  case SERVICE_ID_OPT:
-//    PMLDotOpt_processCharChangeEvt(paramID);
-//    break;
 
   case SERVICE_ID_IO:
     PMLDotIO_processCharChangeEvt(paramID);
@@ -986,11 +970,6 @@ static void PMLDot_processCharValueChangeEvt(uint8_t serviceID,
     break;
 #endif
 
-#ifdef FEATURE_LCD
-  case SERVICE_ID_DISPLAY:
-    PMLDotDisplay_processCharChangeEvt(paramID);
-    break;
-#endif
   default:
     break;
   }

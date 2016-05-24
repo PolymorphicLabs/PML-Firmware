@@ -52,6 +52,7 @@
 #include "Board.h"
 #include "movementservice.h"
 #include "PMLDot_Mov.h"
+#include "MadgwickAHRS.h"
 #include "sensor_mpu9250.h"
 #include "sensor.h"
 #include "util.h"
@@ -247,11 +248,37 @@ void PMLDotMov_processSensorEvent(void)
         }
         else if (mpuIntStatus & MPU_DATA_READY)
         {
+        	uint16_t swap;
           // Read gyro data
           sensorMpu9250GyroRead((uint16_t*)sensorData);
 
+          //Swizzle axis
+          swap = *(uint16_t *)&sensorData[0];
+          *(uint16_t *)&sensorData[0] = *(uint16_t *)&sensorData[2];
+          *(uint16_t *)&sensorData[2] = swap;
+          *(uint16_t *)&sensorData[4] *= -1;
+//          sensorData[0] -> 2
+//		  sensorData[2] -> 0
+//		  sensorData[3] * -1
+
           // Read accelerometer data
           sensorMpu9250AccRead((uint16_t*)&sensorData[6]);
+
+          //Swizzle axis
+          swap = *(uint16_t *)&sensorData[6];
+          *(uint16_t *)&sensorData[6] = *(uint16_t *)&sensorData[8];
+          *(uint16_t *)&sensorData[8] = swap;
+          *(uint16_t *)&sensorData[10] *= -1;
+
+#ifdef FEATURE_AHRS
+          gyroX = sensorMpu9250GyroConvert((int16_t *)&sensorData[0]);
+          gyroY = sensorMpu9250GyroConvert((int16_t *)&sensorData[2]);
+          gyroZ = sensorMpu9250GyroConvert((int16_t *)&sensorData[4]);
+          accelX = sensorMpu9250AccConvert((int16_t *)&sensorData[6]);
+          accelY = sensorMpu9250AccConvert((int16_t *)&sensorData[8]);
+          accelZ = sensorMpu9250AccConvert((int16_t *)&sensorData[10]);
+          MadgwickAHRSupdate(gyroX, gyroY, gyroZ, accelX, accelY, accelZ, magX, magY, magZ);
+#endif
 
           if (shakeDetected)
           {
@@ -268,6 +295,10 @@ void PMLDotMov_processSensorEvent(void)
           uint8_t status;
 
           status = sensorMpu9250MagRead((int16_t*)&sensorData[12]);
+
+          magX = (1.0) * *((int16_t *)&sensorData[12]);
+  		  magY = (1.0) * *((int16_t *)&sensorData[14]);
+  		  magZ = (1.0) * *((int16_t *)&sensorData[16]);
 
           // Always measure magnetometer (not interrupt driven)
           if (status == MAG_BYPASS_FAIL)
@@ -302,19 +333,7 @@ void PMLDotMov_processSensorEvent(void)
 
         // Send data
         Movement_setParameter(SENSOR_DATA, SENSOR_DATA_LEN, sensorData);
-#ifdef FEATURE_AHRS
-        gyroX = sensorMpu9250GyroConvert((int16_t *)&sensorData[0]);
-        gyroY = sensorMpu9250GyroConvert((int16_t *)&sensorData[2]);
-        gyroZ = sensorMpu9250GyroConvert((int16_t *)&sensorData[4]);
-        accelX = sensorMpu9250AccConvert((int16_t *)&sensorData[6]);
-        accelY = sensorMpu9250AccConvert((int16_t *)&sensorData[8]);
-        accelZ = sensorMpu9250AccConvert((int16_t *)&sensorData[10]);
-        magX = (1.0) * *((int16_t *)&sensorData[12]);
-		magY = (1.0) * *((int16_t *)&sensorData[14]);
-		magZ = (1.0) * *((int16_t *)&sensorData[16]);
 
-//        Mailbox_post(motionMailbox, sensorData, BIOS_NO_WAIT);
-#endif
       }
       else
       {
@@ -507,6 +526,9 @@ static void appStateSet(uint8_t newState)
 
     sensorMpu9250PowerOn();
     sensorMpu9250Enable(mpuConfig & 0xFF);
+    sensorMpu9250GyroSetFilter(CONFIG_DLPF_92HZ);
+    sensorMpu9250AccSetFilter(ACCEL_CONF_2_92HZ);
+
 
     if (newState == APP_STATE_ACTIVE)
     {

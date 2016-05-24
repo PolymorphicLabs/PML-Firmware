@@ -680,7 +680,7 @@
 		</variable>
 		<variable>
 			<name>copy_PARENT</name>
-			<value>$%7BPARENT-2-ECLIPSE_HOME%7D/simplelink/ble_cc26xx_2_01_01_44627/Projects/ble/PMLDot/CC26xx</value>
+			<value>$%7BPARENT-2-ECLIPSE_HOME%7D/simplelink/PMLDot/Projects/ble/PMLDot/CC26xx</value>
 		</variable>
 		<variable>
 			<name>copy_PARENT1</name>

@@ -73,8 +73,8 @@
 #define SENSOR_PERI                     2  
 
 // Data readout periods (range 100 - 2550 ms)
-#define SENSOR_MIN_UPDATE_PERIOD        100     // Minimum 100 milliseconds
-#define SENSOR_PERIOD_RESOLUTION        10      // Resolution 10 milliseconds
+#define SENSOR_MIN_UPDATE_PERIOD        10     // Minimum 10 milliseconds
+#define SENSOR_PERIOD_RESOLUTION        2      // Resolution 2 milliseconds
 
 // Common values for turning a sensor on and off + config/status
 #define ST_CFG_SENSOR_DISABLE           0x00
