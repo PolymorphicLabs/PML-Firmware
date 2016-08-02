@@ -70,18 +70,18 @@ package.mak: C:/ti/xdctools_3_32_00_06_core/packages/xdc/bld/ITargetFilter.xs
 C:/ti/xdctools_3_32_00_06_core/packages/xdc/bld/package.xs:
 package.mak: C:/ti/xdctools_3_32_00_06_core/packages/xdc/bld/package.xs
 package.mak: config.bld
-C:/ti/tirtos_cc13xx_cc26xx_2_18_00_03/products/bios_6_45_02_31/packages/ti/targets/ITarget.xs:
-package.mak: C:/ti/tirtos_cc13xx_cc26xx_2_18_00_03/products/bios_6_45_02_31/packages/ti/targets/ITarget.xs
-C:/ti/tirtos_cc13xx_cc26xx_2_18_00_03/products/bios_6_45_02_31/packages/ti/targets/C28_large.xs:
-package.mak: C:/ti/tirtos_cc13xx_cc26xx_2_18_00_03/products/bios_6_45_02_31/packages/ti/targets/C28_large.xs
-C:/ti/tirtos_cc13xx_cc26xx_2_18_00_03/products/bios_6_45_02_31/packages/ti/targets/C28_float.xs:
-package.mak: C:/ti/tirtos_cc13xx_cc26xx_2_18_00_03/products/bios_6_45_02_31/packages/ti/targets/C28_float.xs
-C:/ti/tirtos_cc13xx_cc26xx_2_18_00_03/products/bios_6_45_02_31/packages/ti/targets/package.xs:
-package.mak: C:/ti/tirtos_cc13xx_cc26xx_2_18_00_03/products/bios_6_45_02_31/packages/ti/targets/package.xs
-C:/ti/tirtos_cc13xx_cc26xx_2_18_00_03/products/bios_6_45_02_31/packages/ti/targets/arm/elf/IArm.xs:
-package.mak: C:/ti/tirtos_cc13xx_cc26xx_2_18_00_03/products/bios_6_45_02_31/packages/ti/targets/arm/elf/IArm.xs
-C:/ti/tirtos_cc13xx_cc26xx_2_18_00_03/products/bios_6_45_02_31/packages/ti/targets/arm/elf/package.xs:
-package.mak: C:/ti/tirtos_cc13xx_cc26xx_2_18_00_03/products/bios_6_45_02_31/packages/ti/targets/arm/elf/package.xs
+C:/ti/tirtos_cc13xx_cc26xx_2_20_00_06/products/bios_6_46_00_23/packages/ti/targets/ITarget.xs:
+package.mak: C:/ti/tirtos_cc13xx_cc26xx_2_20_00_06/products/bios_6_46_00_23/packages/ti/targets/ITarget.xs
+C:/ti/tirtos_cc13xx_cc26xx_2_20_00_06/products/bios_6_46_00_23/packages/ti/targets/C28_large.xs:
+package.mak: C:/ti/tirtos_cc13xx_cc26xx_2_20_00_06/products/bios_6_46_00_23/packages/ti/targets/C28_large.xs
+C:/ti/tirtos_cc13xx_cc26xx_2_20_00_06/products/bios_6_46_00_23/packages/ti/targets/C28_float.xs:
+package.mak: C:/ti/tirtos_cc13xx_cc26xx_2_20_00_06/products/bios_6_46_00_23/packages/ti/targets/C28_float.xs
+C:/ti/tirtos_cc13xx_cc26xx_2_20_00_06/products/bios_6_46_00_23/packages/ti/targets/package.xs:
+package.mak: C:/ti/tirtos_cc13xx_cc26xx_2_20_00_06/products/bios_6_46_00_23/packages/ti/targets/package.xs
+C:/ti/tirtos_cc13xx_cc26xx_2_20_00_06/products/bios_6_46_00_23/packages/ti/targets/arm/elf/IArm.xs:
+package.mak: C:/ti/tirtos_cc13xx_cc26xx_2_20_00_06/products/bios_6_46_00_23/packages/ti/targets/arm/elf/IArm.xs
+C:/ti/tirtos_cc13xx_cc26xx_2_20_00_06/products/bios_6_46_00_23/packages/ti/targets/arm/elf/package.xs:
+package.mak: C:/ti/tirtos_cc13xx_cc26xx_2_20_00_06/products/bios_6_46_00_23/packages/ti/targets/arm/elf/package.xs
 package.mak: package.bld
 C:/ti/xdctools_3_32_00_06_core/packages/xdc/tools/configuro/template/compiler.opt.xdt:
 package.mak: C:/ti/xdctools_3_32_00_06_core/packages/xdc/tools/configuro/template/compiler.opt.xdt
@@ -98,7 +98,7 @@ package.mak: C:/ti/xdctools_3_32_00_06_core/packages/xdc/tools/configuro/templat
 endif
 
 ti.targets.arm.elf.M3.rootDir ?= C:/ti/ccsv6/tools/compiler/ti-cgt-arm_15.12.1.LTS
-ti.targets.arm.elf.packageBase ?= C:/ti/tirtos_cc13xx_cc26xx_2_18_00_03/products/bios_6_45_02_31/packages/ti/targets/arm/elf/
+ti.targets.arm.elf.packageBase ?= C:/ti/tirtos_cc13xx_cc26xx_2_20_00_06/products/bios_6_46_00_23/packages/ti/targets/arm/elf/
 .PRECIOUS: $(XDCCFGDIR)/%.oem3
 .PHONY: all,em3 .dlls,em3 .executables,em3 test,em3
 all,em3: .executables,em3

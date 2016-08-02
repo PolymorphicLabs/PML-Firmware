@@ -45,7 +45,7 @@
         xCfgScript="package/cfg/app_ble_pem3.cfg"
         xCfgPrefix="package/cfg/app_ble_pem3"
         cfgScript="C:/ti/simplelink/PML-Firmware/examples/pmlahrs/pmlahrs/ccs/config/app_ble.cfg"
-        cfgArgs="NO_ROM%253D1%252COAD_IMG_E%253D1"
+        cfgArgs="null"
         />
     </configurations>
     <executables>
@@ -57,7 +57,7 @@
         xCfgScript="package/cfg/app_ble_pem3.cfg"
         xCfgPrefix="package/cfg/app_ble_pem3"
         cfgScript="C:/ti/simplelink/PML-Firmware/examples/pmlahrs/pmlahrs/ccs/config/app_ble.cfg"
-        cfgArgs="NO_ROM%253D1%252COAD_IMG_E%253D1"
+        cfgArgs="null"
         />
     </executables>
     <tests>

@@ -1,16 +1,15 @@
 /******************************************************************************
 
- @file  sensortag_io.h
+ @file  ccfg_app_ble.c
 
- @brief This file contains the Sensor Tag sample application,
-        Input/Output control.
+ @brief Customer Configuration CC26xx PG2 device family.
 
  Group: WCS, BTS
  Target Device: CC2650, CC2640, CC1350
 
  ******************************************************************************
  
- Copyright (c) 2015-2016, Texas Instruments Incorporated
+ Copyright (c) 2014-2016, Texas Instruments Incorporated
  All rights reserved.
 
  Redistribution and use in source and binary forms, with or without
@@ -45,74 +44,27 @@
  Release Date: 2016-06-16 18:57:29
  *****************************************************************************/
 
-#ifndef SENSORTAG_IO_H
-#define SENSORTAG_IO_H
+//
+//       ===> READ THIS BEFORE MODIFYING THIS FILE
+//
+//
+//       ===> READ THIS BEFORE MODIFYING THIS FILE
+//
+//
+//       ===> READ THIS BEFORE MODIFYING THIS FILE
+//
 
-#ifdef __cplusplus
-extern "C"
-{
-#endif
+// The customer configuration area (ccfg section) is located at the end of the 
+// flash and reflect the hw configuration of the device. it is very important 
+// that it remains align with the version of driverlib you are using.
+// all BLE project except sensor tag use the same configuration.
+// Keeping the "#include <startup_files/ccfg.c>" guarantee that your project using 
+// driverlib and the ccfg area will be align.
 
-/*********************************************************************
- * INCLUDES
- */
-#include "sensortag.h"
-//#include "board.h"
+// you can modify it if you want, the recommend way will be to remove the 
+// bellow include, copy the content of the <startup_files/ccfg.c> file in this
+// file and rebuild.
 
-/*********************************************************************
- * CONSTANTS
- */
-// Consistent LED usage between SensorTag and Launchpad
-
-#define IOID_GREEN_LED          Board_LED_G
-#define IOID_RED_LED            Board_LED_R
-#define IOID_BLUE_LED           Board_LED_B
-
-
-/*********************************************************************
- * MACROS
- */
-
-/*********************************************************************
- * FUNCTIONS
- */
-#ifndef EXCLUDE_IO
-/*
- * Initialize IO module
- */
-extern void SensorTagIO_init(void);
-
-/*
- * Task Event Processor for IO module
- */
-extern void SensorTagIO_processCharChangeEvt(uint8_t paramID);
-
-/*
- * Reset IO module
- */
-extern void SensorTagIO_reset(void);
-
-/*
- * Function to blink LEDs 'n' times
- */
-extern void SensorTagIO_blinkLed(uint8_t led, uint8_t nBlinks);
-
-#else
-
-/* IO module not included */
-
-#define SensorTagIO_init()
-#define SensorTagIO_reset()
-#define SensorTagIO_processCharChangeEvt(paramID)
-#define SensorTagIO_blinkLed(led,nBlinks)
-
-#endif // EXCLUDE_IO
-
-/*********************************************************************
-*********************************************************************/
-
-#ifdef __cplusplus
-}
-#endif
-
-#endif /* SENSORTAGIO_H */
+// ==> KEEP IN MIND that if you do so, be sure that any further update of the 
+// driverlib must be align with your modified version of ccfg area.
+#include <startup_files/ccfg.c>

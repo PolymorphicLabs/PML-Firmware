@@ -508,6 +508,13 @@ bus_read(dev_addr, reg_addr, reg_data, r_len)
 /* Compile switch definition for Float and double*/
 #define BNO055_FLOAT_ENABLE
 #define BNO055_DOUBLE_ENABLE
+
+
+
+typedef void (*SensorBno055CallbackFn_t)(void);
+
+
+
 /**************************************************************/
 /**\name	STRUCTURE DEFINITIONS                         */
 /**************************************************************/
@@ -820,6 +827,12 @@ s16 sic_8;/**< soft iron calibration matrix 8 data */
 #define BNO055_OPERATION_MODE_M4G				(0X0A)
 #define BNO055_OPERATION_MODE_NDOF_FMC_OFF		(0X0B)
 #define BNO055_OPERATION_MODE_NDOF				(0X0C)
+
+//Data Read settings
+#define BNO055_DATA1_ENABLE						(0x10)
+#define BNO055_DATA2_ENABLE						(0x20)
+#define BNO055_DATA3_ENABLE						(0x40)
+
 
 /* Power mode*/
 #define BNO055_POWER_MODE_NORMAL	(0X00)
@@ -2156,6 +2169,8 @@ BNO055_GYRO_ANY_MOTION_THRES_ADDR
 /**************************************************/
 /**\name INITIALIZATION AND REVISION ID FUNCTIONS */
 /**************************************************/
+
+void bno055_register_callback(SensorBno055CallbackFn_t pfn);
 /*!
  *	@brief
  *	This API is used for initialize

@@ -307,7 +307,7 @@ static bool readRegister(uint8_t *pData, bool saveData)
             // Do not access MPU9250 if it is powered off
             if (p->interfaceID == REGISTER_INTERFACE_I2C1)
             {
-                ok = SensorMpu9250_powerIsOn();
+//                ok = SensorMpu9250_powerIsOn();
             }
 #endif
             // Read register of an I2C sensor
@@ -379,7 +379,7 @@ static void writeRegister(uint8_t *pData)
             // Do not access MPU9250 if it is powered off
             if (p->interfaceID == REGISTER_INTERFACE_I2C1)
             {
-                ok = SensorMpu9250_powerIsOn();
+//                ok = SensorMpu9250_powerIsOn();
             }
 #endif
             // Write register in a I2C sensor

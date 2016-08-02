@@ -70,19 +70,14 @@
  * MACROS
  */
 // Adaptation for LaunchPad
-#ifndef Board_KEY_RIGHT
-#define Board_KEY_RIGHT         Board_BTN2
-#endif
-
-#ifndef Board_KEY_LEFT
-#define Board_KEY_LEFT          Board_BTN1
+#ifndef Board_BUTTON
+#define Board_BUTTON          Board_BUTTON
 #endif
 
 /*********************************************************************
  * CONSTANTS
  */
-#define SK_KEY_REED             0x04
-#define SK_PUSH_KEYS            (SK_KEY_LEFT | SK_KEY_RIGHT)
+#define SK_PUSH_KEYS            (SK_KEY_RIGHT)
 
 // Key press time-outs (seconds)
 #define POWER_PRESS_PERIOD      3
@@ -112,8 +107,7 @@
  * LOCAL VARIABLES
  */
 static uint8_t keys;
-static uint16_t keyLeftTimer;
-static uint16_t keyRightTimer;
+static uint16_t keyTimer;
 static Clock_Struct periodicClock;
 static uint8_t event;
 
@@ -162,9 +156,9 @@ void SensorTagKeys_init(void)
  *
  * @return  none
  */
-void SensorTagKeys_processKeyRight(void)
+void SensorTagKeys_processButton(void)
 {
-  if (PIN_getInputValue(Board_KEY_RIGHT))
+  if (PIN_getInputValue(Board_BUTTON))
   {
     keys &= ~SK_KEY_RIGHT;
   }
@@ -177,55 +171,8 @@ void SensorTagKeys_processKeyRight(void)
   Semaphore_post(sem);
 }
 
-/*********************************************************************
- * @fn      SensorTagKeys_processKeyLeft
- *
- * @brief   Interrupt handler for BUTTON 2 (left)
- *
- * @param   none
- *
- * @return  none
- */
-void SensorTagKeys_processKeyLeft(void)
-{
-  if (PIN_getInputValue(Board_KEY_LEFT))
-  {
-    keys &= ~SK_KEY_LEFT;
-  }
-  else
-  {
-    keys |= SK_KEY_LEFT;
-  }
 
-  // Wake up the application thread
-  Semaphore_post(sem);
-}
 
-#ifdef Board_RELAY
-/*********************************************************************
- * @fn      SensorTagKeys_processRelay
- *
- * @brief   Interrupt service routine for reed relay
- *
- * @param   none
- *
- * @return  none
- */
-void SensorTagKeys_processRelay(void)
-{
-  if (PIN_getInputValue(Board_RELAY))
-  {
-    keys |= SK_KEY_REED;
-  }
-  else
-  {
-    keys &= ~SK_KEY_REED;
-  }
-
-  // Wake up the application thread
-  Semaphore_post(sem);
-}
-#endif // Board_RELAY
 
 /*********************************************************************
  * @fn      SensorTagKeys_processEvent
@@ -284,20 +231,6 @@ void SensorTagKeys_processEvent(void)
       }
     }
 
-#ifndef EXCLUDE_AUDIO
-    // Check left key press
-    if ((current_keys & SK_KEY_LEFT)==0 && (keys & SK_KEY_LEFT)!=0)
-    {
-        SensorTagAudio_enableStreaming(true);
-    }
-
-    // Check left key release
-    if ((current_keys & SK_KEY_LEFT)!=0 && (keys & SK_KEY_LEFT)==0)
-    {
-        SensorTagAudio_enableStreaming(false);
-    }
-
-#endif // EXCLUDE_AUDIO
 
     // Has a key been pressed ?
     if ((keys & SK_PUSH_KEYS) && (current_keys == 0))
@@ -305,8 +238,7 @@ void SensorTagKeys_processEvent(void)
         if (!Util_isActive(&periodicClock))
         {
             Util_startClock(&periodicClock);
-            keyRightTimer = 0;
-            keyLeftTimer = 0;
+            keyTimer = 0;
         }
     }
   }
@@ -325,8 +257,7 @@ void SensorTagKeys_processEvent(void)
  */
 void SensorTagKeys_reset(void)
 {
-  keyLeftTimer = 0;
-  keyRightTimer = 0;
+  keyTimer = 0;
   keys = 0;
   event = 0;
   SK_SetParameter(SK_KEY_ATTR, sizeof(uint8_t), &keys);
@@ -346,52 +277,44 @@ static void SensorTagKeys_clockHandler(UArg arg)
     // Are both keys pressed?
     if (keys & SK_KEY_RIGHT)
     {
-        keyRightTimer++;
+        keyTimer++;
     }
     else
     {
-        keyRightTimer = 0;
+        keyTimer = 0;
     }
 
-    if (keys & SK_KEY_LEFT)
-    {
-        keyLeftTimer++;
-    }
-    else
-    {
-        keyLeftTimer = 0;
-    }
+
 
     // Both keys have been pressed for 6 seconds -> restore factory image
-    if (keyLeftTimer >= RESET_PRESS_PERIOD && keyRightTimer >= RESET_PRESS_PERIOD)
+    if (keyTimer >= RESET_PRESS_PERIOD )
     {
         // Stop the clock
         if (Util_isActive(&periodicClock))
         {
             Util_stopClock(&periodicClock);
-            keyLeftTimer = 0;
-            keyRightTimer = 0;
+            keyTimer = 0;
 
             // set event flag and wake up the application thread
             event |= SK_EVT_FACTORY_RESET;
             Semaphore_post(sem);
         }
     }
-    // Right key (POWER) pressed for three seconds, disconnect if connected
-    else if (keyRightTimer >= POWER_PRESS_PERIOD && keyLeftTimer == 0)
-    {
-        // Stop the clock
-        if (Util_isActive(&periodicClock))
-        {
-            Util_stopClock(&periodicClock);
-            keyRightTimer = 0;
-
-            // set event flag and wake up the application thread
-            event |= SK_EVT_DISCONNECT;
-            Semaphore_post(sem);
-        }
-    }
-    else if (keyLeftTimer == 0 && keyRightTimer == 0)
+//    // Right key (POWER) pressed for three seconds, disconnect if connected
+//    else if (keyRightTimer >= POWER_PRESS_PERIOD && keyLeftTimer == 0)
+//    {
+//        // Stop the clock
+//        if (Util_isActive(&periodicClock))
+//        {
+//            Util_stopClock(&periodicClock);
+//            keyRightTimer = 0;
+//
+//            // set event flag and wake up the application thread
+//            event |= SK_EVT_DISCONNECT;
+//            Semaphore_post(sem);
+//        }
+//    }
+    else if (keyTimer == 0)
     {
         // Stop the clock
         if (Util_isActive(&periodicClock))

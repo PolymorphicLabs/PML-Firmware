@@ -60,7 +60,7 @@
 #include "board.h"
 #include "movementservice.h"
 #include "sensortag_mov.h"
-#include "SensorMpu9250.h"
+#include "SensorBno055.h"
 #include "SensorTagTest.h"
 #include "SensorUtil.h"
 #include "util.h"
@@ -78,7 +78,9 @@
 #define SENSOR_DEFAULT_PERIOD     1000
 
 // Length of the data for this sensor
-#define SENSOR_DATA_LEN           MOVEMENT_DATA_LEN
+#define SENSOR_DATA1_LEN           MOVEMENT_DATA1_LEN
+#define SENSOR_DATA2_LEN           MOVEMENT_DATA2_LEN
+#define SENSOR_DATA3_LEN           MOVEMENT_DATA3_LEN
 
 // Event flag for this sensor
 #define SENSOR_EVT                ST_GYROSCOPE_SENSOR_EVT
@@ -107,6 +109,18 @@
  * GLOBAL VARIABLES
  */
 
+/*----------------------------------------------------------------------------*
+ *  struct bno055_t parameters can be accessed by using BNO055
+ *	BNO055_t having the following parameters
+ *	Bus write function pointer: BNO055_WR_FUNC_PTR
+ *	Bus read function pointer: BNO055_RD_FUNC_PTR
+ *	Burst read function pointer: BNO055_BRD_FUNC_PTR
+ *	Delay function pointer: delay_msec
+ *	I2C address: dev_addr
+ *	Chip id of the sensor: chip_id
+*---------------------------------------------------------------------------*/
+struct bno055_t bno055;
+
 /*********************************************************************
  * EXTERNAL VARIABLES
  */
@@ -121,20 +135,44 @@
 static Clock_Struct periodicClock;
 static uint16_t sensorPeriod;
 static volatile bool sensorReadScheduled;
-static uint8_t sensorData[SENSOR_DATA_LEN];
+static uint8_t sensorData1[SENSOR_DATA1_LEN];//3x int16_t accel x, y, z; 3x int16_t mag x, y, z; 3x int16_t gyro x, y, z
+static uint8_t sensorData2[SENSOR_DATA2_LEN];
+static uint8_t sensorData3[SENSOR_DATA3_LEN];
 
 // Application state variables
 
-// MPU config:
-// bit 0-2:   accelerometer enable(z,y,x)
-// bit 3-5:   gyroscope enable (z,y,x)
-// bit 6:     magnetometer enable
-// bit 7:     WOM enable
-// bit 8-9:   accelerometer range (2,4,8,16)
-static uint16_t mpuConfig;
+
+
+//Bit 6 : Data3 Enable
+//Bit 5 : Data2 Enable
+//Bit 4 : Data1 Enable
+//Bits 3:0 : Operating mode
+//BNO Operating Mode
+//BNO055_OPERATION_MODE_CONFIG
+//BNO055_OPERATION_MODE_ACCONLY
+//BNO055_OPERATION_MODE_MAGONLY
+//BNO055_OPERATION_MODE_GYRONLY
+//BNO055_OPERATION_MODE_ACCMAG
+//BNO055_OPERATION_MODE_ACCGYRO
+//BNO055_OPERATION_MODE_MAGGYRO
+//BNO055_OPERATION_MODE_AMG
+//BNO055_OPERATION_MODE_IMUPLUS
+//BNO055_OPERATION_MODE_COMPASS
+//BNO055_OPERATION_MODE_M4G
+//BNO055_OPERATION_MODE_NDOF_FMC_OFF
+//BNO055_OPERATION_MODE_NDOF
+#define BNO055_OPERATION_MODE_M 0x0F
+#define BNO055_DATA1_ENABLE     0x10
+#define BNO055_DATA2_ENABLE     0x20
+#define BNO055_DATA3_ENABLE     0x40
+static uint8_t bnoConfig1;
+
+static uint8_t bnoConfig2;
+
+static uint16_t bnoAxisMap;
 
 static uint8_t appState;
-static volatile bool mpuDataRdy;
+static volatile bool bnoDataRdy;
 static uint32_t nActivity;
 static uint8_t movThreshold;
 static uint8_t mpuIntStatus;
@@ -182,18 +220,27 @@ void SensorTagMov_init(void)
   Movement_registerAppCBs(&sensorCallbacks);
 
   // Initialize the module state variables
-  mpuConfig = ST_CFG_SENSOR_DISABLE;
+  bnoConfig1 = ST_CFG_SENSOR_DISABLE;
+  bnoConfig2 = 0;
+  bnoAxisMap = 0x24;
   sensorPeriod = SENSOR_DEFAULT_PERIOD;
   sensorReadScheduled = false;
 
   appState = APP_STATE_OFF;
   nMotions = 0;
 
-  if (SensorMpu9250_init())
+  if(bno055_init(&bno055) == BNO055_SUCCESS)
   {
-    SensorTagMov_reset();
-    SensorMpu9250_registerCallback(SensorTagMov_processInterrupt);
+
+	  SensorTagMov_reset();
+	  bno055_register_callback(SensorTagMov_processInterrupt);
   }
+
+//  if (SensorMpu9250_init())
+//  {
+//    SensorTagMov_reset();
+//    SensorMpu9250_registerCallback(SensorTagMov_processInterrupt);
+//  }
 
   // Initialize characteristics
   initCharacteristicValue(SENSOR_PERI,
@@ -216,101 +263,112 @@ void SensorTagMov_init(void)
  */
 void SensorTagMov_processSensorEvent(void)
 {
+  //Are we scheduled to read data?
   if (sensorReadScheduled)
   {
-    uint8_t axes;
 
-    axes = mpuConfig & MPU_AX_ALL;
+	//Read the data
+	switch(bnoConfig1 & BNO055_OPERATION_MODE_M){
 
-    if ((axes != ST_CFG_SENSOR_DISABLE) && (axes != ST_CFG_ERROR))
-    {
-      // Get interrupt status (clears interrupt)
-      mpuIntStatus = SensorMpu9250_irqStatus();
+		case BNO055_OPERATION_MODE_ACCONLY:
+			if(bnoConfig1 & BNO055_DATA1_ENABLE){
+				bno055_read_accel_xyz((struct bno055_accel_t *)&sensorData1[0]);
+			}
+			break;
+		case BNO055_OPERATION_MODE_MAGONLY:
+			if(bnoConfig1 & BNO055_DATA1_ENABLE){
+				bno055_read_mag_xyz((struct bno055_mag_t *)&sensorData1[6]);
+			}
+			break;
+		case BNO055_OPERATION_MODE_GYRONLY:
+			if(bnoConfig1 & BNO055_DATA1_ENABLE){
+				bno055_read_gyro_xyz((struct bno055_gyro_t *)&sensorData1[12]);
+			}
+			break;
+		case BNO055_OPERATION_MODE_ACCMAG:
+			if(bnoConfig1 & BNO055_DATA1_ENABLE){
+				bno055_read_accel_xyz((struct bno055_accel_t *)&sensorData1[0]);
+				bno055_read_mag_xyz((struct bno055_mag_t *)&sensorData1[6]);
+			}
+			break;
+		case BNO055_OPERATION_MODE_ACCGYRO:
+			if(bnoConfig1 & BNO055_DATA1_ENABLE){
+				bno055_read_accel_xyz((struct bno055_accel_t *)&sensorData1[0]);
+				bno055_read_gyro_xyz((struct bno055_gyro_t *)&sensorData1[12]);
+			}
+			break;
+		case BNO055_OPERATION_MODE_MAGGYRO:
+			if(bnoConfig1 & BNO055_DATA1_ENABLE){
+				bno055_read_mag_xyz((struct bno055_mag_t *)&sensorData1[6]);
+				bno055_read_gyro_xyz((struct bno055_gyro_t *)&sensorData1[12]);
+			}
+			break;
+		case BNO055_OPERATION_MODE_AMG:
+			if(bnoConfig1 & BNO055_DATA1_ENABLE){
+				bno055_read_accel_xyz((struct bno055_accel_t *)&sensorData1[0]);
+				bno055_read_mag_xyz((struct bno055_mag_t *)&sensorData1[6]);
+				bno055_read_gyro_xyz((struct bno055_gyro_t *)&sensorData1[12]);
+			}
+			break;
+		case BNO055_OPERATION_MODE_IMUPLUS:
+			if(bnoConfig1 & BNO055_DATA1_ENABLE){
+				bno055_read_accel_xyz((struct bno055_accel_t *)&sensorData1[0]);
+				bno055_read_gyro_xyz((struct bno055_gyro_t *)&sensorData1[12]);
+			}
+			if(bnoConfig1 & BNO055_DATA2_ENABLE){
+				bno055_read_quaternion_wxyz((struct bno055_quaternion_t *)&sensorData2[0]);
+			}
+			if(bnoConfig1 & BNO055_DATA3_ENABLE){
+				bno055_read_linear_accel_xyz((struct bno055_linear_accel_t *)&sensorData3[0]);
+				bno055_read_gravity_xyz((struct bno055_gravity_t *)&sensorData3[6]);
+			}
+			break;
+		case BNO055_OPERATION_MODE_COMPASS:
+		case BNO055_OPERATION_MODE_M4G:
+			if(bnoConfig1 & BNO055_DATA1_ENABLE){
+				bno055_read_accel_xyz((struct bno055_accel_t *)&sensorData1[0]);
+				bno055_read_mag_xyz((struct bno055_mag_t *)&sensorData1[6]);
+			}
+			if(bnoConfig1 & BNO055_DATA2_ENABLE){
+				bno055_read_quaternion_wxyz((struct bno055_quaternion_t *)&sensorData2[0]);
+			}
+			if(bnoConfig1 & BNO055_DATA3_ENABLE){
+				bno055_read_linear_accel_xyz((struct bno055_linear_accel_t *)&sensorData3[0]);
+				bno055_read_gravity_xyz((struct bno055_gravity_t *)&sensorData3[6]);
+			}
+			break;
+		case BNO055_OPERATION_MODE_NDOF_FMC_OFF:
+		case BNO055_OPERATION_MODE_NDOF:
+			if(bnoConfig1 & BNO055_DATA1_ENABLE){
+				bno055_read_accel_xyz((struct bno055_accel_t *)&sensorData1[0]);
+				bno055_read_mag_xyz((struct bno055_mag_t *)&sensorData1[6]);
+				bno055_read_gyro_xyz((struct bno055_gyro_t *)&sensorData1[12]);
+			}
+			if(bnoConfig1 & BNO055_DATA2_ENABLE){
+				bno055_read_quaternion_wxyz((struct bno055_quaternion_t *)&sensorData2[0]);
+			}
+			if(bnoConfig1 & BNO055_DATA3_ENABLE){
+				bno055_read_linear_accel_xyz((struct bno055_linear_accel_t *)&sensorData3[0]);
+				bno055_read_gravity_xyz((struct bno055_gravity_t *)&sensorData3[6]);
+			}
+			break;
 
-      // Process gyro and accelerometer
-      if (mpuDataRdy || appState == APP_STATE_ACTIVE)
-      {
-        if (mpuIntStatus & MPU_MOVEMENT)
-        {
-          // Motion detected (small filter)
-          nMotions++;
-          if (nMotions == 2)
-          {
-            nActivity = MOVEMENT_INACT_CYCLES;
-          }
-        }
-        else if (mpuIntStatus & MPU_DATA_READY)
-        {
-          // Read gyro data
-          SensorMpu9250_gyroRead((uint16_t*)sensorData);
+		default:
+		case BNO055_OPERATION_MODE_CONFIG:
+			break;
+	}
 
-          // Read accelerometer data
-          SensorMpu9250_accRead((uint16_t*)&sensorData[6]);
+	//Send the data
+	if(bnoConfig1 & BNO055_DATA1_ENABLE){
+		Movement_setParameter(SENSOR_DATA1, SENSOR_DATA1_LEN, sensorData1);
+	}
+	if(bnoConfig1 & BNO055_DATA2_ENABLE){
+		Movement_setParameter(SENSOR_DATA2, SENSOR_DATA2_LEN, sensorData2);
+	}
+	if(bnoConfig1 & BNO055_DATA3_ENABLE){
+		Movement_setParameter(SENSOR_DATA3, SENSOR_DATA3_LEN, sensorData3);
+	}
 
-          if (shakeDetected)
-          {
-            // Motion detected by gyro
-            nActivity = MOVEMENT_INACT_CYCLES;
-            shakeDetected = false;
-          }
-        }
-
-        mpuDataRdy = false;
-
-        if (appState == APP_STATE_ACTIVE && !!(mpuConfig & MPU_AX_MAG))
-        {
-          uint8_t status;
-
-          status = SensorMpu9250_magRead((int16_t*)&sensorData[12]);
-
-          // Always measure magnetometer (not interrupt driven)
-          if (status == MAG_BYPASS_FAIL)
-          {
-            // Idle on error
-            nActivity = 0;
-            appState = APP_STATE_ERROR;
-          }
-          else if (status != MAG_STATUS_OK)
-          {
-            SensorMpu9250_magReset();
-          }
-        }
-      }
-
-      if (nActivity>0)
-      {
-        if (appState != APP_STATE_ACTIVE)
-        {
-          // Transition to active state
-          appState = APP_STATE_ACTIVE;
-          nMotions = 0;
-          if (SensorMpu9250_reset())
-          {
-            SensorMpu9250_enable(axes);
-          }
-        }
-        if (mpuConfig & MOV_WOM_ENABLE)
-        {
-          nActivity--;
-        }
-
-        // Send data
-        Movement_setParameter(SENSOR_DATA, SENSOR_DATA_LEN, sensorData);
-      }
-      else
-      {
-        if (appState != APP_STATE_IDLE)
-        {
-          // Transition from active to idle state
-          nMotions = 0;
-          appState = APP_STATE_IDLE;
-          if (SensorMpu9250_reset())
-          {
-            SensorMpu9250_enableWom(movThreshold);
-          }
-        }
-      }
-    }
 
     sensorReadScheduled = false;
   }
@@ -332,45 +390,99 @@ void SensorTagMov_processCharChangeEvt(uint8_t paramID)
 
   switch (paramID)
   {
-  case SENSOR_CONF:
+  case SENSOR_CONF1:
     if ((SensorTag_testResult() & SENSOR_MOV_TEST_BM) == 0)
     {
-      mpuConfig = ST_CFG_ERROR;
+      bnoConfig1 = ST_CFG_ERROR;
     }
 
-    if (mpuConfig != ST_CFG_ERROR)
+    if (bnoConfig1 != ST_CFG_ERROR)
     {
-      Movement_getParameter(SENSOR_CONF, &newCfg);
+      Movement_getParameter(SENSOR_CONF1, &newCfg);
 
-      if ((newCfg & MPU_AX_ALL) == ST_CFG_SENSOR_DISABLE)
+      if ((newCfg ) == ST_CFG_SENSOR_DISABLE)
       {
         // All axes off, turn off device power
-        mpuConfig = newCfg;
+        bnoConfig1 = newCfg;
         appStateSet(APP_STATE_OFF);
       }
       else
       {
         // Some axes on; power up and activate MPU
-        mpuConfig = newCfg;
+        bnoConfig1 = newCfg;
         appStateSet(APP_STATE_ACTIVE);
-        if (SensorMpu9250_powerIsOn())
-        {
-          DELAY_MS(5);
-          mpuConfig = newCfg | (SensorMpu9250_accReadRange() << 8);
-        }
+//        if (SensorMpu9250_powerIsOn())
+//        {
+//          DELAY_MS(5);
+//          mpuConfig = newCfg | (SensorMpu9250_accReadRange() << 8);
+//        }
       }
 
-      Movement_setParameter(SENSOR_CONF, sizeof(mpuConfig), (uint8_t*)&mpuConfig);
+      Movement_setParameter(SENSOR_CONF1, sizeof(bnoConfig1), (uint8_t*)&bnoConfig1);
     }
     else
     {
       // Make sure the previous characteristics value is restored
-      initCharacteristicValue(SENSOR_CONF, mpuConfig, sizeof(mpuConfig));
+      initCharacteristicValue(SENSOR_CONF1, bnoConfig1, sizeof(bnoConfig1));
     }
 
     // Data initially zero
-    initCharacteristicValue(SENSOR_DATA, 0, SENSOR_DATA_LEN);
+    initCharacteristicValue(SENSOR_DATA1, 0, SENSOR_DATA1_LEN);
+    initCharacteristicValue(SENSOR_DATA2, 0, SENSOR_DATA2_LEN);
+    initCharacteristicValue(SENSOR_DATA3, 0, SENSOR_DATA3_LEN);
     break;
+
+  case SENSOR_CONF2:
+    if ((SensorTag_testResult() & SENSOR_MOV_TEST_BM) == 0)
+    {
+      bnoConfig2 = ST_CFG_ERROR;
+    }
+
+    if (bnoConfig2 != ST_CFG_ERROR)
+    {
+      Movement_getParameter(SENSOR_CONF2, &newCfg);
+
+      if ((newCfg ) == ST_CFG_SENSOR_DISABLE)
+      {
+        // All axes off, turn off device power
+        bnoConfig2 = newCfg;
+//        appStateSet(APP_STATE_OFF);
+      }
+      else
+      {
+        // Some axes on; power up and activate MPU
+        bnoConfig2 = newCfg;
+//        appStateSet(APP_STATE_ACTIVE);
+
+      }
+
+      Movement_setParameter(SENSOR_CONF2, sizeof(bnoConfig2), (uint8_t*)&bnoConfig2);
+    }
+    else
+    {
+      // Make sure the previous characteristics value is restored
+      initCharacteristicValue(SENSOR_CONF2, bnoConfig2, sizeof(bnoConfig2));
+    }
+
+    // Data initially zero
+    initCharacteristicValue(SENSOR_DATA1, 0, SENSOR_DATA1_LEN);
+    initCharacteristicValue(SENSOR_DATA2, 0, SENSOR_DATA2_LEN);
+    initCharacteristicValue(SENSOR_DATA3, 0, SENSOR_DATA3_LEN);
+    break;
+
+  case SENSOR_AXISMAP:
+	  Movement_getParameter(SENSOR_AXISMAP, &newCfg);
+	  if(newCfg != bnoAxisMap)
+	  {
+		  bno055_set_operation_mode(BNO055_OPERATION_MODE_CONFIG);
+		  bno055_set_axis_remap_value(newCfg & 0x3F);
+		  bno055_set_remap_x_sign((newCfg & 0x0040) >> 6);
+		  bno055_set_remap_y_sign((newCfg & 0x0080) >> 7);
+		  bno055_set_remap_z_sign((newCfg & 0x0010) >> 8);
+		  bno055_set_operation_mode(bnoConfig1 & BNO055_OPERATION_MODE_M);
+		  bnoAxisMap = newCfg;
+	  }
+	  break;
 
   case SENSOR_PERI:
     Movement_getParameter(SENSOR_PERI, &newValue8);
@@ -395,11 +507,14 @@ void SensorTagMov_processCharChangeEvt(uint8_t paramID)
  */
 void SensorTagMov_reset(void)
 {
-  initCharacteristicValue(SENSOR_DATA, 0, SENSOR_DATA_LEN);
-  mpuConfig = ST_CFG_SENSOR_DISABLE | (ACC_RANGE_8G << 8);
-  Movement_setParameter(SENSOR_CONF, sizeof(mpuConfig), (uint8_t*)&mpuConfig);
+  initCharacteristicValue(SENSOR_DATA1, 0, SENSOR_DATA1_LEN);
+  initCharacteristicValue(SENSOR_DATA2, 0, SENSOR_DATA2_LEN);
+  initCharacteristicValue(SENSOR_DATA3, 0, SENSOR_DATA3_LEN);
+  bnoConfig1 = 0;
+  bnoConfig2 = 0;
+  Movement_setParameter(SENSOR_CONF1, sizeof(bnoConfig1), (uint8_t*)&bnoConfig1);
 
-  // Remove power from the MPU
+  // Remove power from the BNO
   appStateSet(APP_STATE_OFF);
 }
 
@@ -411,7 +526,7 @@ void SensorTagMov_reset(void)
 /*********************************************************************
  * @fn      SensorTagMov_processInterrupt
  *
- * @brief   Interrupt handler for MPU
+ * @brief   Interrupt handler for BNO
  *
  * @param   none
  *
@@ -420,8 +535,8 @@ void SensorTagMov_reset(void)
 static void SensorTagMov_processInterrupt(void)
 {
   // Wake up the application thread
-  mpuDataRdy = true;
-  sensorReadScheduled = true;
+//  bnoDataRdy = true;
+//  sensorReadScheduled = true;
   Semaphore_post(sem);
 }
 
@@ -474,8 +589,12 @@ static void sensorChangeCB(uint8_t paramID)
 static void initCharacteristicValue(uint8_t paramID, uint8_t value,
                                     uint8_t paramLen)
 {
-  memset(sensorData,value,paramLen);
-  Movement_setParameter(paramID, paramLen, sensorData);
+  memset(sensorData1,value,paramLen);
+  memset(sensorData2,value,paramLen);
+  memset(sensorData3,value,paramLen);
+  Movement_setParameter(paramID, paramLen, sensorData1);
+  Movement_setParameter(paramID, paramLen, sensorData2);
+  Movement_setParameter(paramID, paramLen, sensorData3);
 }
 
 /*******************************************************************************
@@ -490,8 +609,10 @@ static void appStateSet(uint8_t newState)
   {
     appState = APP_STATE_OFF;
 
-    SensorMpu9250_enable(0);
-    SensorMpu9250_powerOff();
+    bno055_set_power_mode(BNO055_POWER_MODE_SUSPEND);
+
+//    SensorMpu9250_enable(0);
+//    SensorMpu9250_powerOff();
 
     // Stop scheduled data measurements
     Util_stopClock(&periodicClock);
@@ -504,10 +625,19 @@ static void appStateSet(uint8_t newState)
     movThreshold = WOM_THR;
     mpuIntStatus = 0;
     shakeDetected = false;
-    mpuDataRdy = false;
+    bnoDataRdy = false;
 
-    SensorMpu9250_powerOn();
-    SensorMpu9250_enable(mpuConfig & 0xFF);
+//    SensorMpu9250_powerOn();
+//    SensorMpu9250_enable(mpuConfig & 0xFF);
+
+    //Reset Sensor, after reset device comes up in normal mode
+    bno055_set_sys_rst(1);
+    DELAY_MS(650);
+    //Set axis mapping
+    bno055_set_operation_mode(bnoConfig1 & BNO055_OPERATION_MODE_M);
+
+
+
 
     if (newState == APP_STATE_ACTIVE)
     {

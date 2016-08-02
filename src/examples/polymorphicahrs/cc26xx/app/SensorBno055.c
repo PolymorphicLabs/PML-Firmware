@@ -56,12 +56,128 @@
 /*********************************************************/
 /*				INCLUDES	*/
 /*******************************************************/
-#include "bno055.h"
+#include "SensorBno055.h"
+#include "Board.h"
+#include "SensorUtil.h"
+#include "SensorI2C.h"
+
+// Sensor selection/de-selection
+#define SENSOR_SELECT()     SensorI2C_select(SENSOR_I2C_0,Board_BNO055_ADDR)
+#define SENSOR_DESELECT()   SensorI2C_deselect()
+
+// Pins that are used by the BNO055
+static PIN_Config BnoPinTable[] =
+{
+    Board_BNO_INT    | PIN_INPUT_EN | PIN_PULLDOWN | PIN_IRQ_DIS | PIN_HYSTERESIS,
+
+    PIN_TERMINATE
+};
+static PIN_State pinGpioState;
+static PIN_Handle hBnoPin;
+
+// The application may register a callback to handle interrupts
+static SensorBno055CallbackFn_t isrCallbackFn = NULL;
+
 /*! file <BNO055 >
     brief <Sensor driver for BNO055> */
 /*	STRUCTURE DEFINITIONS	*/
 static struct bno055_t *p_bno055;
 /*	 LOCAL FUNCTIONS	*/
+
+
+/*	\Brief: The API is used as I2C bus write
+ *	\Return : Status of the I2C write
+ *	\param dev_addr : The device address of the sensor
+ *	\param reg_addr : Address of the first register,
+ *   will data is going to be written
+ *	\param reg_data : It is a value hold in the array,
+ *		will be used for write the value into the register
+ *	\param cnt : The no of byte of data to be write
+ */
+s8 BNO055_I2C_bus_write(u8 dev_addr, u8 reg_addr, u8 *reg_data, u8 cnt)
+{
+
+	if(!SensorI2C_select(SENSOR_I2C_0,dev_addr)){
+		return BNO055_ERROR;
+	}
+	SensorI2C_writeReg(reg_addr, reg_data, cnt);
+
+	SensorI2C_deselect();
+
+	return BNO055_SUCCESS;
+
+}
+
+ /*	\Brief: The API is used as I2C bus read
+ *	\Return : Status of the I2C read
+ *	\param dev_addr : The device address of the sensor
+ *	\param reg_addr : Address of the first register,
+ *  will data is going to be read
+ *	\param reg_data : This data read from the sensor,
+ *   which is hold in an array
+ *	\param cnt : The no of byte of data to be read
+ */
+s8 BNO055_I2C_bus_read(u8 dev_addr, u8 reg_addr, u8 *reg_data, u8 cnt)
+{
+
+	//Write address
+	if(!SensorI2C_select(SENSOR_I2C_0,dev_addr)){
+		return BNO055_ERROR;
+	}
+	SensorI2C_writeReg(reg_addr, reg_data, 0);
+
+	SensorI2C_deselect();
+
+	//Read Data
+	if(!SensorI2C_select(SENSOR_I2C_0,dev_addr)){
+		return BNO055_ERROR;
+	}
+	SensorI2C_read(reg_data, cnt);
+
+	SensorI2C_deselect();
+
+	return BNO055_SUCCESS;
+}
+
+void BNO055_delay_msek(u32 msek)
+{
+	DELAY_MS(msek);
+}
+
+/*******************************************************************************
+* @fn          bno055_registerCallback
+*
+* @brief       Register a call-back for interrupt processing
+*
+* @return      none
+*/
+void bno055_register_callback(SensorBno055CallbackFn_t pfn)
+{
+    isrCallbackFn = pfn;
+}
+
+/*******************************************************************************
+ *  @fn         bno055_callback
+ *
+ *  Interrupt service routine for the BNO
+ *
+ *  @param      handle PIN_Handle connected to the callback
+ *
+ *  @param      pinId  PIN_Id of the DIO triggering the callback
+ *
+ *  @return     none
+ ******************************************************************************/
+static void bno055_callback(PIN_Handle handle, PIN_Id pinId)
+{
+    if (pinId == Board_BNO_INT)
+    {
+        if (isrCallbackFn != NULL)
+        {
+            isrCallbackFn();
+        }
+    }
+}
+
 /*!
  *	@brief
  *	This API is used for initialize
@@ -94,10 +210,28 @@ BNO055_RETURN_FUNCTION_TYPE bno055_init(struct bno055_t *bno055)
 	u8 bno055_page_zero_u8 = BNO055_PAGE_ZERO;
 	/* Array holding the Software revision id
 	*/
+
+    // Pins used by MPU
+    hBnoPin = PIN_open(&pinGpioState, BnoPinTable);
+
+    // Register MPU interrupt
+    PIN_registerIntCb(hBnoPin, bno055_callback);
+
+    // Application callback initially NULL
+    isrCallbackFn = NULL;
+
+
 	u8 a_SW_ID_u8[BNO055_REV_ID_SIZE] = {
 	BNO055_INIT_VALUE, BNO055_INIT_VALUE};
 	/* stuct parameters are assign to bno055*/
 	p_bno055 = bno055;
+
+	//Assign utility functions
+	p_bno055->bus_write = BNO055_I2C_bus_write;
+	p_bno055->bus_read = BNO055_I2C_bus_read;
+	p_bno055->delay_msec = BNO055_delay_msek;
+	p_bno055->dev_addr = BNO055_I2C_ADDR2;
+
 	/* Write the default page as zero*/
 	com_rslt = p_bno055->BNO055_BUS_WRITE_FUNC
 	(p_bno055->dev_addr,

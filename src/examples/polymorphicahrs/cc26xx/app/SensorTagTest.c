@@ -74,13 +74,13 @@ uint8_t SensorTag_testExecute(uint8_t testMap)
     selfTestResult = 0;
 
     // 1. Temp sensor test
-    if (testMap & SENSOR_TMP_TEST_BM)
-    {
-        if (SensorTmp007_test())
-        {
-            selfTestResult |= SENSOR_TMP_TEST_BM;
-        }
-    }
+//    if (testMap & SENSOR_TMP_TEST_BM)
+//    {
+//        if (SensorTmp007_test())
+//        {
+//            selfTestResult |= SENSOR_TMP_TEST_BM;
+//        }
+//    }
 
     // 2. Humidity  sensor test
     if (testMap & SENSOR_HUM_TEST_BM)
@@ -100,32 +100,32 @@ uint8_t SensorTag_testExecute(uint8_t testMap)
         }
     }
 
-    // 3. Optic sensor test
-    if (testMap & SENSOR_OPT_TEST_BM)
-    {
-        if (SensorOpt3001_test())
-        {
-            selfTestResult |= SENSOR_OPT_TEST_BM;
-        }
-    }
+//    // 3. Optic sensor test
+//    if (testMap & SENSOR_OPT_TEST_BM)
+//    {
+//        if (SensorOpt3001_test())
+//        {
+//            selfTestResult |= SENSOR_OPT_TEST_BM;
+//        }
+//    }
 
-    // 4. MPU test
-    if (testMap & SENSOR_MOV_TEST_BM)
-    {
-        if (SensorMpu9250_test())
-        {
+//    // 4. MPU test
+//    if (testMap & SENSOR_MOV_TEST_BM)
+//    {
+//        if (SensorMpu9250_test())
+//        {
             selfTestResult |= SENSOR_MOV_TEST_BM;
-        }
-    }
+//        }
+//    }
 
     // 5. Magnetometer test
-    if (testMap & SENSOR_MAG_TEST_BM)
-    {
-        if (SensorMpu9250_magTest())
-        {
+//    if (testMap & SENSOR_MAG_TEST_BM)
+//    {
+//        if (SensorMpu9250_magTest())
+//        {
             selfTestResult |= SENSOR_MAG_TEST_BM;
-        }
-    }
+//        }
+//    }
 
     // 6. Flash test
     if (testMap & SENSOR_FLASH_TEST_BM)

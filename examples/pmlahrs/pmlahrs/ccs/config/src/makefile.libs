@@ -33,7 +33,7 @@ endif
 # ======== library macros ========
 #
 sysbios_SRC = $(GEN_SRC_DIR)/sysbios
-sysbios_LIB = $(GEN_SRC_DIR)/sysbios/sysbios.aem3
+sysbios_LIB = $(GEN_SRC_DIR)/sysbios/rom_sysbios.aem3
 
 #
 # ======== dependencies ========
@@ -44,7 +44,7 @@ clean: .sysbios_clean
 
 # ======== convenient build goals ========
 .PHONY: sysbios
-sysbios: $(GEN_SRC_DIR)/sysbios/sysbios.aem3
+sysbios: $(GEN_SRC_DIR)/sysbios/rom_sysbios.aem3
 
 # CDT managed make executables depend on $(OBJS)
 OBJS += $(sysbios_LIB)

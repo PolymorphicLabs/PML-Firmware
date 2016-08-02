@@ -1,9 +1,8 @@
 /******************************************************************************
 
- @file  sensortag_io.h
+ @file  movementservice.h
 
- @brief This file contains the Sensor Tag sample application,
-        Input/Output control.
+ @brief Gyroscope service definitions and prototypes
 
  Group: WCS, BTS
  Target Device: CC2650, CC2640, CC1350
@@ -45,8 +44,8 @@
  Release Date: 2016-06-16 18:57:29
  *****************************************************************************/
 
-#ifndef SENSORTAG_IO_H
-#define SENSORTAG_IO_H
+#ifndef MOVEMENTSERVICE_H
+#define MOVEMENTSERVICE_H
 
 #ifdef __cplusplus
 extern "C"
@@ -56,57 +55,81 @@ extern "C"
 /*********************************************************************
  * INCLUDES
  */
-#include "sensortag.h"
-//#include "board.h"
+#include "st_util.h"
 
 /*********************************************************************
  * CONSTANTS
  */
-// Consistent LED usage between SensorTag and Launchpad
 
-#define IOID_GREEN_LED          Board_LED_G
-#define IOID_RED_LED            Board_LED_R
-#define IOID_BLUE_LED           Board_LED_B
+// Service UUID
+#define MOVEMENT_SERV_UUID             0xAA80
+#define MOVEMENT_DATA1_UUID            0xAA81
+#define MOVEMENT_DATA2_UUID            0xAA82
+#define MOVEMENT_DATA3_UUID            0xAA83
+#define MOVEMENT_CONF1_UUID            0xAA84
+#define MOVEMENT_CONF2_UUID            0xAA85
+#define MOVEMENT_AXISMAP_UUID          0xAA86
+#define MOVEMENT_PERI_UUID             0xAA87
 
+// Sensor Profile Services bit fields
+#define MOVEMENT_SERVICE               0x00000020
+
+// Length of sensor data in bytes
+#define MOVEMENT_DATA1_LEN              18
+#define MOVEMENT_DATA2_LEN              8
+#define MOVEMENT_DATA3_LEN              12
+
+/*********************************************************************
+ * TYPEDEFS
+ */
 
 /*********************************************************************
  * MACROS
  */
 
+
 /*********************************************************************
- * FUNCTIONS
+ * API FUNCTIONS
  */
-#ifndef EXCLUDE_IO
-/*
- * Initialize IO module
- */
-extern void SensorTagIO_init(void);
+
 
 /*
- * Task Event Processor for IO module
+ * Movement_addService - Initializes the Sensor GATT Profile service by
+ *          registering GATT attributes with the GATT server.
  */
-extern void SensorTagIO_processCharChangeEvt(uint8_t paramID);
+extern bStatus_t Movement_addService(void);
 
 /*
- * Reset IO module
+ * Movement_registerAppCBs - Registers the application callback function.
+ *                    Only call this function once.
+ *
+ *    appCallbacks - pointer to application callbacks.
  */
-extern void SensorTagIO_reset(void);
+extern bStatus_t Movement_registerAppCBs(sensorCBs_t *appCallbacks);
 
 /*
- * Function to blink LEDs 'n' times
+ * Movement_setParameter - Set a Sensor GATT Profile parameter.
+ *
+ *    param - Profile parameter ID
+ *    len   - length of data to write
+ *    value - pointer to data to write.  This is dependent on
+ *          the parameter ID and WILL be cast to the appropriate
+ *          data type (example: data type of uint16_t will be cast to
+ *          uint16_t pointer).
  */
-extern void SensorTagIO_blinkLed(uint8_t led, uint8_t nBlinks);
+extern bStatus_t Movement_setParameter(uint8_t param, uint8_t len, void *value);
 
-#else
+/*
+ * Movement_getParameter - Get a Sensor GATT Profile parameter.
+ *
+ *    param - Profile parameter ID
+ *    value - pointer to data to read.  This is dependent on
+ *          the parameter ID and WILL be cast to the appropriate
+ *          data type (example: data type of uint16_t will be cast to
+ *          uint16_t pointer).
+ */
+extern bStatus_t Movement_getParameter(uint8_t param, void *value);
 
-/* IO module not included */
-
-#define SensorTagIO_init()
-#define SensorTagIO_reset()
-#define SensorTagIO_processCharChangeEvt(paramID)
-#define SensorTagIO_blinkLed(led,nBlinks)
-
-#endif // EXCLUDE_IO
 
 /*********************************************************************
 *********************************************************************/
@@ -115,4 +138,4 @@ extern void SensorTagIO_blinkLed(uint8_t led, uint8_t nBlinks);
 }
 #endif
 
-#endif /* SENSORTAGIO_H */
+#endif /* MOVEMENTSERVICE_H */

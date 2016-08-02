@@ -74,14 +74,15 @@ extern "C" {
 
 /* Interface #0 */
 #define     Board_HDC1000_ADDR      (0x43)
-#define     Board_TMP007_ADDR       (0x44)
-#define     Board_OPT3001_ADDR      (0x45)
-#define     Board_BMP280_ADDR       (0x77)
+//#define     Board_TMP007_ADDR       (0x44)
+//#define     Board_OPT3001_ADDR      (0x45)
+//#define     Board_BMP280_ADDR       (0x77)
 #define     Board_MS5607_ADDR		(0x76)
+#define		Board_BNO055_ADDR		(0x29)
 
 /* Interface #1 */
-#define     Board_MPU9250_ADDR      (0x68)
-#define     Board_MPU9250_MAG_ADDR  (0x0C)
+//#define     Board_MPU9250_ADDR      (0x68)
+//#define     Board_MPU9250_MAG_ADDR  (0x0C)
 
 #ifdef __cplusplus
 }

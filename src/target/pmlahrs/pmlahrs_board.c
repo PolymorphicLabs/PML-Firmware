@@ -62,12 +62,10 @@ Release Date: 2016-06-16 18:57:29
  *   Set it correctly to point to your CCXX50STK
  */
 #if defined(PMLAHRS)
+    #undef PMLAHRS
     #include <../boards/pmlahrs/Board.h>
     #include <../boards/pmlahrs/PMLAHRS.c>
 #else
     #error "Must define either 'PMLAHRS'. Please \
             set include path to point to appropriate device."
 #endif
-
-
-

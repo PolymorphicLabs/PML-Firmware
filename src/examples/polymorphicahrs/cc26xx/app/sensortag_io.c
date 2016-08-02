@@ -53,7 +53,7 @@
 #include "gattservapp.h"
 #include "sensortag_io.h"
 #include "ioservice.h"
-#include "sensortag_buzzer.h"
+//#include "sensortag_buzzer.h"
 #include "sensortag_factoryreset.h"
 
 #include <ti/sysbios/knl/Semaphore.h>
@@ -72,16 +72,13 @@
 /*********************************************************************
  * CONSTANTS
  */
-#define IO_DATA_LED1            0x01 // Red
-#define IO_DATA_LED2            0x02 // Green
-#define IO_DATA_BUZZER          0x04
+#define IO_DATA_LED_R            0x01 // Red
+#define IO_DATA_LED_G            0x02 // Green
+#define IO_DATA_LED_B          	 0x04 // Blue
 #define IO_DATA_EXT_FLASH_ERASE 0x08
 
 #define BLINK_DURATION          20   // Milliseconds
 
-#ifdef Board_BUZZER
-#define BUZZER_FREQUENCY        2000
-#endif
 
 /*********************************************************************
  * TYPEDEFS
@@ -169,14 +166,13 @@ void SensorTagIO_processCharChangeEvt(uint8_t paramID)
     }
     else
     {
-      // Mode change: make sure LEDs and buzzer are off
+      // Mode change: make sure LEDs are off
       Io_setParameter(SENSOR_DATA, 1, &ioValue);
 
       PIN_setOutputValue(hGpioPin, IOID_RED_LED, Board_LED_OFF);
       PIN_setOutputValue(hGpioPin, IOID_GREEN_LED, Board_LED_OFF);
-#ifdef Board_BUZZER
-      SensorTagBuzzer_close();
-#endif
+      PIN_setOutputValue(hGpioPin, IOID_BLUE_LED, Board_LED_OFF);
+
     }
   }
   else if (paramID == SENSOR_DATA)
@@ -189,7 +185,7 @@ void SensorTagIO_processCharChangeEvt(uint8_t paramID)
     // Control by remote client:
     // - possible to operate the LEDs and buzzer
     // - right key functionality overridden (will not terminate connection)
-    if (!!(ioValue & IO_DATA_LED1))
+    if (!!(ioValue & IO_DATA_LED_R))
     {
       PIN_setOutputValue(hGpioPin, IOID_RED_LED, Board_LED_ON);
     }
@@ -198,7 +194,7 @@ void SensorTagIO_processCharChangeEvt(uint8_t paramID)
       PIN_setOutputValue(hGpioPin, IOID_RED_LED, Board_LED_OFF);
     }
 
-    if (!!(ioValue & IO_DATA_LED2))
+    if (!!(ioValue & IO_DATA_LED_G))
     {
       PIN_setOutputValue(hGpioPin, IOID_GREEN_LED, Board_LED_ON);
     }
@@ -206,18 +202,16 @@ void SensorTagIO_processCharChangeEvt(uint8_t paramID)
     {
       PIN_setOutputValue(hGpioPin, IOID_GREEN_LED, Board_LED_OFF);
     }
-#ifdef Board_BUZZER
-    if (!!((ioValue & IO_DATA_BUZZER)))
+
+    if (!!(ioValue & IO_DATA_LED_B))
     {
-      // Start buzzer (PWM)
-      SensorTagBuzzer_open(hGpioPin);
-      SensorTagBuzzer_setFrequency(BUZZER_FREQUENCY);
+      PIN_setOutputValue(hGpioPin, IOID_BLUE_LED, Board_LED_ON);
     }
     else
     {
-      SensorTagBuzzer_close();
+      PIN_setOutputValue(hGpioPin, IOID_BLUE_LED, Board_LED_OFF);
     }
-#endif
+
     if (!!((ioValue & IO_DATA_EXT_FLASH_ERASE)))
     {
         SensorTagFactoryReset_extFlashErase();
@@ -245,9 +239,7 @@ void SensorTagIO_reset(void)
   // Normal mode; make sure LEDs and buzzer are off
   PIN_setOutputValue(hGpioPin, IOID_RED_LED, Board_LED_OFF);
   PIN_setOutputValue(hGpioPin, IOID_GREEN_LED, Board_LED_OFF);
-#ifdef BOARD_Buzzer
-  SensorTagBuzzer_close();
-#endif
+  PIN_setOutputValue(hGpioPin, IOID_BLUE_LED, Board_LED_OFF);
 }
 
 

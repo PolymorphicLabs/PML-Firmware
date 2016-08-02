@@ -1,16 +1,15 @@
 /******************************************************************************
 
- @file  sensortag_io.h
+ @file  st_util.h
 
- @brief This file contains the Sensor Tag sample application,
-        Input/Output control.
+ @brief Utilities for Sensor Tag services
 
  Group: WCS, BTS
  Target Device: CC2650, CC2640, CC1350
 
  ******************************************************************************
  
- Copyright (c) 2015-2016, Texas Instruments Incorporated
+ Copyright (c) 2012-2016, Texas Instruments Incorporated
  All rights reserved.
 
  Redistribution and use in source and binary forms, with or without
@@ -45,74 +44,75 @@
  Release Date: 2016-06-16 18:57:29
  *****************************************************************************/
 
-#ifndef SENSORTAG_IO_H
-#define SENSORTAG_IO_H
-
-#ifdef __cplusplus
-extern "C"
-{
-#endif
-
-/*********************************************************************
- * INCLUDES
- */
-#include "sensortag.h"
-//#include "board.h"
-
-/*********************************************************************
- * CONSTANTS
- */
-// Consistent LED usage between SensorTag and Launchpad
-
-#define IOID_GREEN_LED          Board_LED_G
-#define IOID_RED_LED            Board_LED_R
-#define IOID_BLUE_LED           Board_LED_B
-
+#ifndef ST_UTIL_H
+#define ST_UTIL_H
 
 /*********************************************************************
  * MACROS
  */
+#include "bcomdef.h"
+#include "gatt.h"
 
 /*********************************************************************
- * FUNCTIONS
+ * MACROS
  */
-#ifndef EXCLUDE_IO
-/*
- * Initialize IO module
- */
-extern void SensorTagIO_init(void);
+#ifdef GATT_TI_UUID_128_BIT
 
-/*
- * Task Event Processor for IO module
- */
-extern void SensorTagIO_processCharChangeEvt(uint8_t paramID);
-
-/*
- * Reset IO module
- */
-extern void SensorTagIO_reset(void);
-
-/*
- * Function to blink LEDs 'n' times
- */
-extern void SensorTagIO_blinkLed(uint8_t led, uint8_t nBlinks);
+// TI Base 128-bit UUID: F000XXXX-0451-4000-B000-000000000000
+#define TI_UUID_SIZE        ATT_UUID_SIZE
+#define TI_UUID(uuid)       TI_BASE_UUID_128(uuid)
 
 #else
 
-/* IO module not included */
+// Using 16-bit UUID
+#define TI_UUID_SIZE        ATT_BT_UUID_SIZE
+#define TI_UUID(uuid)       LO_UINT16(uuid), HI_UINT16(uuid)
 
-#define SensorTagIO_init()
-#define SensorTagIO_reset()
-#define SensorTagIO_processCharChangeEvt(paramID)
-#define SensorTagIO_blinkLed(led,nBlinks)
-
-#endif // EXCLUDE_IO
-
-/*********************************************************************
-*********************************************************************/
-
-#ifdef __cplusplus
-}
 #endif
 
-#endif /* SENSORTAGIO_H */
+// Utility string macros
+#define STRINGIFY(x) #x
+#define TOSTRING(x) STRINGIFY(x)
+
+// Profile Parameter Identifiers
+#define SENSOR_DATA                     0  
+#define SENSOR_CONF                     1  
+#define SENSOR_PERI                     2  
+
+//Added for movement service
+#define SENSOR_DATA1                     3
+#define SENSOR_DATA2                     4
+#define SENSOR_DATA3                     5
+#define SENSOR_CONF1                     6
+#define SENSOR_CONF2                     7
+#define SENSOR_AXISMAP                   8
+
+// Data readout periods (range 100 - 2550 ms)
+#define SENSOR_MIN_UPDATE_PERIOD        100     // Minimum 100 milliseconds
+#define SENSOR_PERIOD_RESOLUTION        10      // Resolution 10 milliseconds
+
+// Common values for turning a sensor on and off + config/status
+#define ST_CFG_SENSOR_DISABLE           0x00
+#define ST_CFG_SENSOR_ENABLE            0x01
+#define ST_CFG_ERROR                    0xFF
+
+/*********************************************************************
+ * Profile Callbacks
+ */
+
+// Callback when a characteristic value has changed
+typedef void (*sensorChange_t)(uint8_t paramID);
+
+typedef struct
+{
+  sensorChange_t pfnSensorChange;  // Called when characteristic value changes
+} sensorCBs_t;
+
+/*-------------------------------------------------------------------
+ * FUNCTIONS
+ */
+
+extern bStatus_t utilExtractUuid16(gattAttribute_t *pAttr, uint16_t *pValue);
+
+#endif /* ST_UTIL_H */
+

@@ -66,16 +66,16 @@ extern "C"
  */
 
 // Service ID's for internal application use
-#define SERVICE_ID_TMP       0x01
-#define SERVICE_ID_OPT       0x02
+//#define SERVICE_ID_TMP       0x01
+//#define SERVICE_ID_OPT       0x02
 #define SERVICE_ID_MOV       0x04
 #define SERVICE_ID_HUM       0x05
 #define SERVICE_ID_BAR       0x06
 #define SERVICE_ID_IO        0x07
 #define SERVICE_ID_KEYS      0x08
 #define SERVICE_ID_CC        0x09
-#define SERVICE_ID_DISPLAY   0x0A
-#define SERVICE_ID_LIGHT     0x0B
+//#define SERVICE_ID_DISPLAY   0x0A
+//#define SERVICE_ID_LIGHT     0x0B
 #define SERVICE_ID_REGISTER  0x0C
 #define SERVICE_ID_BATT      0x0D
 

@@ -84,21 +84,21 @@
 // SensorTag on-board devices
 #include "st_util.h"
 
-#include "sensortag_tmp.h"
+//#include "sensortag_tmp.h"
 #include "sensortag_hum.h"
 #include "sensortag_bar.h"
 #include "sensortag_mov.h"
-#include "sensortag_opt.h"
+//#include "sensortag_opt.h"
 #include "sensortag_keys.h"
 #include "sensortag_io.h"
 #include "sensortag_batt.h"
-#include "sensortag_audio.h"
+//#include "sensortag_audio.h"
 #include "sensortag_oad.h"
 #include "sensortag_conn_ctrl.h"
 
 // DevPack devices
-#include "sensortag_display.h"
-#include "sensortag_light.h"
+//#include "sensortag_display.h"
+//#include "sensortag_light.h"
 
 /*******************************************************************************
  * CONSTANTS
@@ -153,7 +153,7 @@
 
 #ifndef ST_TASK_STACK_SIZE
 // Stack size may be overridden by project settings
-#define ST_TASK_STACK_SIZE                    700
+#define ST_TASK_STACK_SIZE                    1024
 #endif
 
 // Internal Events for RTOS application
@@ -225,8 +225,8 @@ static uint8_t scanRspData[] =
   // complete name
   0x11,   // length of this data
   GAP_ADTYPE_LOCAL_NAME_COMPLETE,
-  'C', 'C', '2', '6', '5', '0', ' ',
-  'S', 'e', 'n',  's',  'o',  'r',  'T',  'a',  'g',
+  'P','o','l','y','m','o','r','p','h','i','c',' ',
+  'A','H','R','S',
 
   // connection interval range
   0x05,   // length of this data
@@ -257,13 +257,9 @@ static uint8_t advertData[] =
   // in this peripheral
   0x03,   // length of this data
   GAP_ADTYPE_16BIT_MORE,      // some of the UUID's, but not all
-#ifdef INCLUDE_DISPLAY
-  LO_UINT16(DISPLAY_SERV_UUID),
-  HI_UINT16(DISPLAY_SERV_UUID),
-#else
   LO_UINT16(MOVEMENT_SERV_UUID),
   HI_UINT16(MOVEMENT_SERV_UUID),
-#endif
+
 
   // Manufacturer specific advertising data
   0x06,
@@ -276,24 +272,22 @@ static uint8_t advertData[] =
 };
 
 // GAP GATT Attributes
-static const uint8_t attDeviceName[GAP_DEVICE_NAME_LEN] = "SensorTag 2.0";
+static const uint8_t attDeviceName[GAP_DEVICE_NAME_LEN] = "Polymorphic AHRS";
 
 // Device information parameters
-static const uint8_t devInfoModelNumber[] = "CC2650 SensorTag";
+static const uint8_t devInfoModelNumber[] = "Polymorphic AHRS";
 static const uint8_t devInfoNA[] =          "N.A.";
 static const uint8_t devInfoFirmwareRev[] = FW_VERSION_STR;
-static const uint8_t devInfoMfrName[] =     "Texas Instruments";
+static const uint8_t devInfoMfrName[] =     "Polymorphic Labs";
 static const uint8_t devInfoHardwareRev[] = "PCB 1.2/1.3";
 
 // Pins that are actively used by the application
 static PIN_Config SensortagAppPinTable[] =
 {
-    Board_LED1       | PIN_GPIO_OUTPUT_EN | PIN_GPIO_LOW | PIN_PUSHPULL | PIN_DRVSTR_MAX,     /* LED initially off             */
-    Board_LED2       | PIN_GPIO_OUTPUT_EN | PIN_GPIO_LOW | PIN_PUSHPULL | PIN_DRVSTR_MAX,     /* LED initially off             */
-    Board_KEY_LEFT   | PIN_INPUT_EN | PIN_PULLUP | PIN_IRQ_BOTHEDGES | PIN_HYSTERESIS,        /* Button is active low          */
-    Board_KEY_RIGHT  | PIN_INPUT_EN | PIN_PULLUP | PIN_IRQ_BOTHEDGES | PIN_HYSTERESIS,        /* Button is active low          */
-    Board_RELAY      | PIN_INPUT_EN | PIN_PULLDOWN | PIN_IRQ_BOTHEDGES | PIN_HYSTERESIS,      /* Relay is active high          */
-    Board_BUZZER     | PIN_GPIO_OUTPUT_EN | PIN_GPIO_LOW | PIN_PUSHPULL | PIN_DRVSTR_MAX,     /* Buzzer initially off          */
+    Board_LED_R       | PIN_GPIO_OUTPUT_EN | PIN_GPIO_LOW | PIN_PUSHPULL | PIN_DRVSTR_MAX,     /* LED initially off             */
+    Board_LED_G       | PIN_GPIO_OUTPUT_EN | PIN_GPIO_LOW | PIN_PUSHPULL | PIN_DRVSTR_MAX,     /* LED initially off             */
+    Board_LED_B       | PIN_GPIO_OUTPUT_EN | PIN_GPIO_LOW | PIN_PUSHPULL | PIN_DRVSTR_MAX,     /* LED initially off             */
+    Board_BUTTON   | PIN_INPUT_EN | PIN_PULLUP | PIN_IRQ_BOTHEDGES | PIN_HYSTERESIS,        /* Button is active low          */
 
     PIN_TERMINATE
 };
@@ -519,22 +513,22 @@ static void SensorTag_init(void)
 #endif
 
   // Sensor modules
-  SensorTagTmp_init();                            // IR temperature sensor
+//  SensorTagTmp_init();                            // IR temperature sensor
   SensorTagHum_init();                            // Humidity sensor
   SensorTagBar_init();                            // Pressure sensor
   SensorTagMov_init();                            // Movement processor
-  SensorTagOpt_init();                            // Optical sensor
+//  SensorTagOpt_init();                            // Optical sensor
 
   // Auxiliary modules
   SensorTagKeys_init();                           // Key and relay handling
   SensorTagIO_init();                             // IO (LED+buzzer+self test)
   SensorTagRegister_init();                       // Register Service
-  SensorTagAudio_init();                          // Voice Control
+//  SensorTagAudio_init();                          // Voice Control
   SensorTagOad_init();                            // Over the Air Download
 
   // DevPack devices
-  SensorTagDisplay_init();                        // Display DevPack
-  SensorTagLight_init();                          // LED Light Devpack
+//  SensorTagDisplay_init();                        // Display DevPack
+//  SensorTagLight_init();                          // LED Light Devpack
 
   // Start the Device
   GAPRole_StartDevice(&sensorTag_gapRoleCBs);
@@ -606,13 +600,6 @@ static void SensorTag_taskFxn(UArg a0, UArg a1)
 
       // Process new data if available
       SensorTagKeys_processEvent();
-#ifndef EXCLUDE_AUDIO
-      if (gapProfileState == GAPROLE_CONNECTED)
-      {
-        SensorTagAudio_processEvent();
-      }
-#endif
-      SensorTagOpt_processSensorEvent();
       SensorTagMov_processSensorEvent();
       SensorTagBatt_processSensorEvent();
     }
@@ -630,9 +617,6 @@ static void SensorTag_taskFxn(UArg a0, UArg a1)
       if (gapProfileState == GAPROLE_ADVERTISING)
       {
         SensorTagIO_blinkLed(IOID_GREEN_LED, 1);
-        #ifdef INCLUDE_DISPLAY
-        SensorTagDisplay_showBatteryLevel();
-        #endif
       }
     }
 
@@ -772,9 +756,10 @@ static void SensorTag_processStateChangeEvt(gaprole_States_t newState)
       }
 
       // Turn of LEDs and buzzer
-      PIN_setOutputValue(hGpioPin, Board_LED1, Board_LED_OFF);
-      PIN_setOutputValue(hGpioPin, Board_LED2, Board_LED_OFF);
-      PIN_setOutputValue(hGpioPin, Board_BUZZER, Board_BUZZER_OFF);
+      PIN_setOutputValue(hGpioPin, Board_LED_R, Board_LED_OFF);
+      PIN_setOutputValue(hGpioPin, Board_LED_G, Board_LED_OFF);
+      PIN_setOutputValue(hGpioPin, Board_LED_B, Board_LED_OFF);
+
 
       // Update connection parameters
       SensorTagConnectionControl_update();
@@ -805,7 +790,7 @@ static void SensorTag_processStateChangeEvt(gaprole_States_t newState)
 
   case GAPROLE_ERROR:
     SensorTag_resetAllModules();
-    PIN_setOutputValue(hGpioPin,Board_LED1, Board_LED_ON);
+    PIN_setOutputValue(hGpioPin,Board_LED_R, Board_LED_ON);
     break;
 
   default:
@@ -814,9 +799,7 @@ static void SensorTag_processStateChangeEvt(gaprole_States_t newState)
 
   gapProfileState = newState;
 
-#ifdef INCLUDE_DISPLAY
-  SensorTagDisplay_showStatus();
-#endif // INCLUDE_DISPLAY
+
 }
 
 /*******************************************************************************
@@ -850,9 +833,6 @@ static void SensorTag_processCharValueChangeEvt(uint8_t serviceID,
 {
   switch (serviceID)
   {
-  case SERVICE_ID_TMP:
-    SensorTagTmp_processCharChangeEvt(paramID);
-    break;
 
   case SERVICE_ID_HUM:
     SensorTagHum_processCharChangeEvt(paramID);
@@ -864,10 +844,6 @@ static void SensorTag_processCharValueChangeEvt(uint8_t serviceID,
 
   case SERVICE_ID_MOV:
     SensorTagMov_processCharChangeEvt(paramID);
-    break;
-
-  case SERVICE_ID_OPT:
-    SensorTagOpt_processCharChangeEvt(paramID);
     break;
 
   case SERVICE_ID_IO:
@@ -886,13 +862,6 @@ static void SensorTag_processCharValueChangeEvt(uint8_t serviceID,
     SensorTagConnControl_processCharChangeEvt(paramID);
     break;
 
-  case SERVICE_ID_DISPLAY:
-    SensorTagDisplay_processCharChangeEvt(paramID);
-    break;
-
-  case SERVICE_ID_LIGHT:
-      SensorTagLight_processCharChangeEvt(paramID);
-      break;
   default:
     break;
   }
@@ -991,16 +960,16 @@ static void SensorTag_enqueueMsg(uint8_t event, uint8_t serviceID, uint8_t param
  */
 static void SensorTag_resetAllModules(void)
 {
-  SensorTagTmp_reset();
+//  SensorTagTmp_reset();
   SensorTagHum_reset();
   SensorTagBar_reset();
   SensorTagMov_reset();
-  SensorTagOpt_reset();
+//  SensorTagOpt_reset();
   SensorTagBatt_reset();
   SensorTagIO_reset();
   SensorTagRegister_reset();
   SensorTagKeys_reset();
-  SensorTagLight_reset();
+//  SensorTagLight_reset();
 }
 
 /*!*****************************************************************************
@@ -1018,16 +987,8 @@ static void SensorTag_callback(PIN_Handle handle, PIN_Id pinId)
 {
   switch (pinId)
   {
-  case Board_KEY_LEFT:
-    SensorTagKeys_processKeyLeft();
-    break;
-
-  case Board_KEY_RIGHT:
-    SensorTagKeys_processKeyRight();
-    break;
-
-  case Board_RELAY:
-    SensorTagKeys_processRelay();
+  case Board_BUTTON:
+    SensorTagKeys_processButton();
     break;
 
   default:

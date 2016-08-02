@@ -1,16 +1,15 @@
 /******************************************************************************
 
- @file  sensortag_io.h
+ @file  st_util.c
 
- @brief This file contains the Sensor Tag sample application,
-        Input/Output control.
+ @brief Utilities for Sensor Tag services
 
  Group: WCS, BTS
  Target Device: CC2650, CC2640, CC1350
 
  ******************************************************************************
  
- Copyright (c) 2015-2016, Texas Instruments Incorporated
+ Copyright (c) 2012-2016, Texas Instruments Incorporated
  All rights reserved.
 
  Redistribution and use in source and binary forms, with or without
@@ -45,74 +44,52 @@
  Release Date: 2016-06-16 18:57:29
  *****************************************************************************/
 
-#ifndef SENSORTAG_IO_H
-#define SENSORTAG_IO_H
-
-#ifdef __cplusplus
-extern "C"
-{
-#endif
-
-/*********************************************************************
+/*-------------------------------------------------------------------
  * INCLUDES
  */
-#include "sensortag.h"
-//#include "board.h"
+#include "bcomdef.h"
+#include "gatt.h"
+#include "st_util.h"
 
-/*********************************************************************
- * CONSTANTS
- */
-// Consistent LED usage between SensorTag and Launchpad
-
-#define IOID_GREEN_LED          Board_LED_G
-#define IOID_RED_LED            Board_LED_R
-#define IOID_BLUE_LED           Board_LED_B
-
-
-/*********************************************************************
- * MACROS
- */
-
-/*********************************************************************
+/*-------------------------------------------------------------------
  * FUNCTIONS
  */
-#ifndef EXCLUDE_IO
-/*
- * Initialize IO module
+
+/*********************************************************************
+ * @fn      utilExtractUuid16
+ *
+ * @brief   Extracts a 16-bit UUID from a GATT attribute
+ *
+ * @param   pAttr - pointer to attribute
+ *
+ * @param   pUuid - pointer to UUID to be extracted
+ *
+ * @return  Success or Failure
  */
-extern void SensorTagIO_init(void);
+bStatus_t utilExtractUuid16(gattAttribute_t *pAttr, uint16_t *pUuid)
+{
+  bStatus_t status = SUCCESS;
 
-/*
- * Task Event Processor for IO module
- */
-extern void SensorTagIO_processCharChangeEvt(uint8_t paramID);
+  if (pAttr->type.len == ATT_BT_UUID_SIZE)
+  {
+    // 16-bit UUID direct
+    *pUuid = BUILD_UINT16(pAttr->type.uuid[0], pAttr->type.uuid[1]);
+#ifdef GATT_TI_UUID_128_BIT
+  }
+  else if (pAttr->type.len == ATT_UUID_SIZE)
+  {
+    // 16-bit UUID extracted bytes 12 and 13
+    *pUuid = BUILD_UINT16(pAttr->type.uuid[12], pAttr->type.uuid[13]);
+#endif
+  } else {
+    *pUuid = 0xFFFF;
+    status = FAILURE;
+  }
 
-/*
- * Reset IO module
- */
-extern void SensorTagIO_reset(void);
+  return status;
+}
 
-/*
- * Function to blink LEDs 'n' times
- */
-extern void SensorTagIO_blinkLed(uint8_t led, uint8_t nBlinks);
-
-#else
-
-/* IO module not included */
-
-#define SensorTagIO_init()
-#define SensorTagIO_reset()
-#define SensorTagIO_processCharChangeEvt(paramID)
-#define SensorTagIO_blinkLed(led,nBlinks)
-
-#endif // EXCLUDE_IO
 
 /*********************************************************************
 *********************************************************************/
 
-#ifdef __cplusplus
-}
-#endif
-
-#endif /* SENSORTAGIO_H */

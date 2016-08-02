@@ -16,7 +16,7 @@ var exeOpts = new Executable.Attrs({
         cfgHome: 'xconfig_app_ble',
 });
 
-exeOpts.cfgArgs = 'NO_ROM%3D1%2COAD_IMG_E%3D1';
+exeOpts.cfgArgs = 'null';
 exeOpts.cfgArgsEncoded = true;
 
 var exe = Pkg[makeAssembly ? 'addAssembly': 'addExecutable'](

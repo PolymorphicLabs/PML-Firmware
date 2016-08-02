@@ -449,12 +449,12 @@
 		<link>
 			<name>PROFILES/movementservice.c</name>
 			<type>1</type>
-			<locationURI>SRC_EX/profiles/sensor_profile/cc26xx/movementservice.c</locationURI>
+			<locationURI>PML_FIRMWARE_LOC/src/examples/polymorphicahrs/cc26xx/app/movementservice.c</locationURI>
 		</link>
 		<link>
 			<name>PROFILES/movementservice.h</name>
 			<type>1</type>
-			<locationURI>SRC_EX/profiles/sensor_profile/cc26xx/movementservice.h</locationURI>
+			<locationURI>PML_FIRMWARE_LOC/src/examples/polymorphicahrs/cc26xx/app/movementservice.h</locationURI>
 		</link>
 		<link>
 			<name>PROFILES/oad.c</name>
@@ -519,27 +519,27 @@
 		<link>
 			<name>PROFILES/st_util.c</name>
 			<type>1</type>
-			<locationURI>SRC_EX/profiles/sensor_profile/cc26xx/st_util.c</locationURI>
+			<locationURI>PML_FIRMWARE_LOC/src/examples/polymorphicahrs/cc26xx/app/st_util.c</locationURI>
 		</link>
 		<link>
 			<name>PROFILES/st_util.h</name>
 			<type>1</type>
-			<locationURI>SRC_EX/profiles/sensor_profile/cc26xx/st_util.h</locationURI>
+			<locationURI>PML_FIRMWARE_LOC/src/examples/polymorphicahrs/cc26xx/app/st_util.h</locationURI>
+		</link>
+		<link>
+			<name>Startup/board.c</name>
+			<type>1</type>
+			<locationURI>PML_FIRMWARE_LOC/src/target/board.c</locationURI>
+		</link>
+		<link>
+			<name>Startup/board.h</name>
+			<type>1</type>
+			<locationURI>PML_FIRMWARE_LOC/src/target/board.h</locationURI>
 		</link>
 		<link>
 			<name>Startup/main.c</name>
 			<type>1</type>
-			<locationURI>SRC_EX/examples/sensortag/cc26xx/app/main.c</locationURI>
-		</link>
-		<link>
-			<name>Startup/pmlahrs_board.c</name>
-			<type>1</type>
-			<locationURI>PML_FIRMWARE_LOC/src/target/pmlahrs/pmlahrs_board.c</locationURI>
-		</link>
-		<link>
-			<name>Startup/pmlahrs_board.h</name>
-			<type>1</type>
-			<locationURI>PML_FIRMWARE_LOC/src/target/pmlahrs/pmlahrs_board.h</locationURI>
+			<locationURI>PML_FIRMWARE_LOC/src/examples/polymorphicahrs/cc26xx/app/main.c</locationURI>
 		</link>
 		<link>
 			<name>TOOLS/app_ble.cfg</name>
@@ -555,6 +555,11 @@
 			<name>TOOLS/cc26xx_app_oad.cmd</name>
 			<type>1</type>
 			<locationURI>SRC_EX/common/cc26xx/ccs/cc26xx_app_oad.cmd</locationURI>
+		</link>
+		<link>
+			<name>TOOLS/ccfg_app_ble.c</name>
+			<type>1</type>
+			<locationURI>copy_PARENT1/ccs/config/ccfg_app_ble.c</locationURI>
 		</link>
 		<link>
 			<name>TOOLS/ccs_compiler_defines.bcfg</name>
@@ -672,6 +677,16 @@
 			<locationURI>TI_RTOS_DRIVERS_BASE/ti/mw/sensors/SensorBmp280.h</locationURI>
 		</link>
 		<link>
+			<name>Middleware/sensors/SensorBno055.c</name>
+			<type>1</type>
+			<locationURI>PML_FIRMWARE_LOC/src/examples/polymorphicahrs/cc26xx/app/SensorBno055.c</locationURI>
+		</link>
+		<link>
+			<name>Middleware/sensors/SensorBno055.h</name>
+			<type>1</type>
+			<locationURI>PML_FIRMWARE_LOC/src/examples/polymorphicahrs/cc26xx/app/SensorBno055.h</locationURI>
+		</link>
+		<link>
 			<name>Middleware/sensors/SensorHdc1000.c</name>
 			<type>1</type>
 			<locationURI>TI_RTOS_DRIVERS_BASE/ti/mw/sensors/SensorHdc1000.c</locationURI>
@@ -732,16 +747,6 @@
 			<locationURI>TI_RTOS_DRIVERS_BASE/ti/mw/sensors/SensorUtil.h</locationURI>
 		</link>
 		<link>
-			<name>Middleware/sensors/bno055.c</name>
-			<type>1</type>
-			<locationURI>PML_FIRMWARE_LOC/src/examples/polymorphicahrs/cc26xx/app/bno055.c</locationURI>
-		</link>
-		<link>
-			<name>Middleware/sensors/bno055.h</name>
-			<type>1</type>
-			<locationURI>PML_FIRMWARE_LOC/src/examples/polymorphicahrs/cc26xx/app/bno055.h</locationURI>
-		</link>
-		<link>
 			<name>Middleware/sensors/bno055_support.c</name>
 			<type>1</type>
 			<locationURI>PML_FIRMWARE_LOC/src/examples/polymorphicahrs/cc26xx/app/bno055_support.c</locationURI>
@@ -774,7 +779,7 @@
 		</variable>
 		<variable>
 			<name>CC26XXWARE</name>
-			<value>file:/C:/ti/tirtos_cc13xx_cc26xx_2_20_00_06/products/cc26xxware_2_24_02_17202</value>
+			<value>file:/C:/ti/tirtos_cc13xx_cc26xx_2_18_00_03/products/cc26xxware_2_23_03_17162</value>
 		</variable>
 		<variable>
 			<name>ORG_PROJ_DIR</name>

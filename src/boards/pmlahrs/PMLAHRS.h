@@ -61,99 +61,39 @@ extern const PIN_Config BoardGpioInitTable[];
  *  ==========================================================================*/
 
 /* Same RF Configuration as 7x7 EM */
-#define CC2650EM_7ID
+#define CC2650EM_5XD
 
 /* Mapping of pins to board signals using general board aliases
  *      <board signal alias>        <pin mapping>
  */
 
 /* Discrete outputs */
-#define Board_STK_LED1              IOID_10
-#define Board_STK_LED2              IOID_15
-#define Board_BUZZER                IOID_21
+#define Board_LED_R              IOID_3
+#define Board_LED_G              IOID_1
+#define Board_LED_B              IOID_12
 #define Board_LED_ON                1
 #define Board_LED_OFF               0
-#define Board_BUZZER_ON             1
-#define Board_BUZZER_OFF            0
 
 /* Discrete inputs */
-#define Board_KEY_LEFT              IOID_0
-#define Board_KEY_RIGHT             IOID_4
-#define Board_RELAY                 IOID_3
+#define Board_BUTTON              IOID_0
 
 /* Sensor outputs */
-#define Board_MPU_INT               IOID_7
-#define Board_TMP_RDY               IOID_1
+#define Board_BNO_INT               IOID_7
+#define Board_HDC_INT               IOID_10
 
 /* I2C */
-#define Board_I2C0_SDA0             IOID_5
-#define Board_I2C0_SCL0             IOID_6
 #define Board_I2C0_SDA1             IOID_8
 #define Board_I2C0_SCL1             IOID_9
 
 /* SPI */
-#define Board_SPI_FLASH_CS          IOID_14
-#define Board_SPI_DEVPK_CS          IOID_20
+#define Board_SPI_FLASH_CS          IOID_11
 #define Board_FLASH_CS_ON           0
 #define Board_FLASH_CS_OFF          1
-#define Board_DEVPK_CS_ON           1
-#define Board_DEVPK_CS_OFF          0
 
-#define Board_SPI0_MISO             IOID_18
-#define Board_SPI0_MOSI             IOID_19
-#define Board_SPI0_CLK              IOID_17
-#define Board_SPI0_CSN              PIN_UNASSIGNED
-#define Board_SPI1_MISO             PIN_UNASSIGNED
-#define Board_SPI1_MOSI             PIN_UNASSIGNED
-#define Board_SPI1_CLK              PIN_UNASSIGNED
-#define Board_SPI1_CSN              PIN_UNASSIGNED
+#define Board_SPI0_MISO             IOID_12
+#define Board_SPI0_MOSI             IOID_13
+#define Board_SPI0_CLK              IOID_14
 
-/* UART when connected to SRF06EB */
-#define Board_EB_UART_TX            IOID_16
-#define Board_EB_UART_RX            IOID_17
-
-/* Power control */
-#define Board_MPU_POWER             IOID_12
-#define Board_MPU_POWER_ON          1
-#define Board_MPU_POWER_OFF         0
-
-/* Audio */
-#define Board_MIC_POWER             IOID_13
-#define Board_MIC_POWER_ON          1
-#define Board_MIC_POWER_OFF         0
-#define Board_AUDIO_DI              IOID_2
-#define Board_AUDIO_CLK             IOID_11
-
-/* UART pins used by driver */
-#define Board_UART_TX               Board_DP5_UARTTX
-#define Board_UART_RX               Board_DP4_UARTRX
-
-/* DevPack common */
-#define Board_AUDIOFS_TDO           IOID_16
-#define Board_AUDIODO               IOID_22
-#define Board_DP2                   IOID_23
-#define Board_DP1                   IOID_24
-#define Board_DP0                   IOID_25
-#define Board_DP3                   IOID_27
-#define Board_DP4_UARTRX            IOID_28
-#define Board_DP5_UARTTX            IOID_29
-#define Board_DEVPK_ID              IOID_30
-#define Board_SPI_DEVPK_CS          IOID_20
-
-/* LCD DevPack */
-#define Board_LCD_EXTCOMIN          IOID_22
-#define Board_LCD_EXTMODE           IOID_28
-#define Board_LCD_ENABLE            IOID_29
-#define Board_LCD_POWER             PIN_UNASSIGNED
-#define Board_LCD_CS                Board_SPI_DEVPK_CS
-#define Board_LCD_CS_ON             1
-#define Board_LCD_CS_OFF            0
-
-/* LED-Audio DevPack */
-#define Board_DEVPK_LIGHT_BLUE      IOID_23
-#define Board_DEVPK_LIGHT_GREEN     IOID_24
-#define Board_DEVPK_LIGHT_WHITE     IOID_25
-#define Board_DEVPK_LIGHT_RED       IOID_27
 
 /** ============================================================================
  *  Instance identifiers
