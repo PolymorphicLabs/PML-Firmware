@@ -70,6 +70,8 @@
 
 #if defined(PMLAHRS)
     #include "./pmlahrs/pmlahrs_board.h"
+#elif defined(PMLDOTMOVE)
+    #include "./pmldotmove/pmldotmove_board.h"
 #else // unknown board
     #error "***ERROR*** Invalid Board Specified! Please see board.h for options."
 #endif

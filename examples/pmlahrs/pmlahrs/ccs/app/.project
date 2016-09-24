@@ -354,12 +354,12 @@
 		<link>
 			<name>PROFILES/barometerservice.c</name>
 			<type>1</type>
-			<locationURI>SRC_EX/profiles/sensor_profile/cc26xx/barometerservice.c</locationURI>
+			<locationURI>PML_FIRMWARE_LOC/src/examples/polymorphicahrs/cc26xx/app/barometerservice.c</locationURI>
 		</link>
 		<link>
 			<name>PROFILES/barometerservice.h</name>
 			<type>1</type>
-			<locationURI>SRC_EX/profiles/sensor_profile/cc26xx/barometerservice.h</locationURI>
+			<locationURI>PML_FIRMWARE_LOC/src/examples/polymorphicahrs/cc26xx/app/barometerservice.h</locationURI>
 		</link>
 		<link>
 			<name>PROFILES/battservice.c</name>
@@ -687,14 +687,14 @@
 			<locationURI>PML_FIRMWARE_LOC/src/examples/polymorphicahrs/cc26xx/app/SensorBno055.h</locationURI>
 		</link>
 		<link>
-			<name>Middleware/sensors/SensorHdc1000.c</name>
+			<name>Middleware/sensors/SensorHdc1080.c</name>
 			<type>1</type>
-			<locationURI>TI_RTOS_DRIVERS_BASE/ti/mw/sensors/SensorHdc1000.c</locationURI>
+			<locationURI>PML_FIRMWARE_LOC/src/examples/polymorphicahrs/cc26xx/app/SensorHdc1080.c</locationURI>
 		</link>
 		<link>
-			<name>Middleware/sensors/SensorHdc1000.h</name>
+			<name>Middleware/sensors/SensorHdc1080.h</name>
 			<type>1</type>
-			<locationURI>TI_RTOS_DRIVERS_BASE/ti/mw/sensors/SensorHdc1000.h</locationURI>
+			<locationURI>PML_FIRMWARE_LOC/src/examples/polymorphicahrs/cc26xx/app/SensorHdc1080.h</locationURI>
 		</link>
 		<link>
 			<name>Middleware/sensors/SensorI2C.c</name>

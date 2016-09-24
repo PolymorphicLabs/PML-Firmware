@@ -138,6 +138,7 @@ int main()
 
   /* Kick off application - Priority 1 */
   SensorTag_createTask();
+  SensorTagMov_createTask();
   SensorTagHum_createTask();
   SensorTagBar_createTask();
 

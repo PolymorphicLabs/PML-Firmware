@@ -62,7 +62,7 @@
 #include "SensorI2C.h"
 
 // Sensor selection/de-selection
-#define SENSOR_SELECT()     SensorI2C_select(SENSOR_I2C_0,Board_BNO055_ADDR)
+#define SENSOR_SELECT()     SensorI2C_select(SENSOR_I2C_1,Board_BNO055_ADDR)
 #define SENSOR_DESELECT()   SensorI2C_deselect()
 
 // Pins that are used by the BNO055
@@ -97,7 +97,7 @@ static struct bno055_t *p_bno055;
 s8 BNO055_I2C_bus_write(u8 dev_addr, u8 reg_addr, u8 *reg_data, u8 cnt)
 {
 
-	if(!SensorI2C_select(SENSOR_I2C_0,dev_addr)){
+	if(!SensorI2C_select(SENSOR_I2C_1,dev_addr)){
 		return BNO055_ERROR;
 	}
 	SensorI2C_writeReg(reg_addr, reg_data, cnt);
@@ -121,7 +121,7 @@ s8 BNO055_I2C_bus_read(u8 dev_addr, u8 reg_addr, u8 *reg_data, u8 cnt)
 {
 
 	//Write address
-	if(!SensorI2C_select(SENSOR_I2C_0,dev_addr)){
+	if(!SensorI2C_select(SENSOR_I2C_1,dev_addr)){
 		return BNO055_ERROR;
 	}
 	SensorI2C_writeReg(reg_addr, reg_data, 0);
@@ -129,7 +129,7 @@ s8 BNO055_I2C_bus_read(u8 dev_addr, u8 reg_addr, u8 *reg_data, u8 cnt)
 	SensorI2C_deselect();
 
 	//Read Data
-	if(!SensorI2C_select(SENSOR_I2C_0,dev_addr)){
+	if(!SensorI2C_select(SENSOR_I2C_1,dev_addr)){
 		return BNO055_ERROR;
 	}
 	SensorI2C_read(reg_data, cnt);

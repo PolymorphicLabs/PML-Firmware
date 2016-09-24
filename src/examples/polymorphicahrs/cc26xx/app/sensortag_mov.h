@@ -73,6 +73,11 @@ extern "C"
 
 #ifndef EXCLUDE_MOV
 /*
+ * Create the Movement sensor task
+ */
+extern void SensorTagMov_createTask(void);
+
+/*
  * Initialize Movement sensor module
  */
 extern void SensorTagMov_init(void);

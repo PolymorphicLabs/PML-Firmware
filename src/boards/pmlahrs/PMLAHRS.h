@@ -70,7 +70,7 @@ extern const PIN_Config BoardGpioInitTable[];
 /* Discrete outputs */
 #define Board_LED_R              IOID_3
 #define Board_LED_G              IOID_1
-#define Board_LED_B              IOID_12
+#define Board_LED_B              IOID_2
 #define Board_LED_ON                1
 #define Board_LED_OFF               0
 

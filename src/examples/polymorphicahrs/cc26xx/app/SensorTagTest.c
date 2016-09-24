@@ -44,7 +44,7 @@
 #include "SensorTagTest.h"
 #include "ExtFlash.h"
 #include "SensorTmp007.h"
-#include "SensorHdc1000.h"
+#include "SensorHdc1080.h"
 #include "sensor_ms5607.h"
 #include "SensorOpt3001.h"
 #include "SensorMpu9250.h"
@@ -85,7 +85,7 @@ uint8_t SensorTag_testExecute(uint8_t testMap)
     // 2. Humidity  sensor test
     if (testMap & SENSOR_HUM_TEST_BM)
     {
-        if (SensorHdc1000_test())
+        if (SensorHdc1080_test())
         {
             selfTestResult |= SENSOR_HUM_TEST_BM;
         }

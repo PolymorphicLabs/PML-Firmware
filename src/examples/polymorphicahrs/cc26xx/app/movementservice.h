@@ -78,6 +78,10 @@ extern "C"
 #define MOVEMENT_DATA1_LEN              18
 #define MOVEMENT_DATA2_LEN              8
 #define MOVEMENT_DATA3_LEN              12
+#define MOVEMENT_CONF1_LEN				1
+#define MOVEMENT_CONF2_LEN				2
+#define MOVEMENT_AXISMAP_LEN			2
+
 
 /*********************************************************************
  * TYPEDEFS

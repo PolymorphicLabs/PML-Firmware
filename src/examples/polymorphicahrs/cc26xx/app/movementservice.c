@@ -592,6 +592,7 @@ bStatus_t Movement_registerAppCBs(sensorCBs_t *appCallbacks)
 bStatus_t Movement_setParameter(uint8_t param, uint8_t len, void *value)
 {
   bStatus_t ret = SUCCESS;
+  static uint8_t zeroCount = 0;
 
   switch (param)
   {
@@ -613,7 +614,7 @@ bStatus_t Movement_setParameter(uint8_t param, uint8_t len, void *value)
     case SENSOR_DATA2:
     if (len == SENSOR_DATA2_LEN)
     {
-      memcpy(sensorData1, value, SENSOR_DATA2_LEN);
+      memcpy(sensorData2, value, SENSOR_DATA2_LEN);
       // See if Notification has been enabled
       ret = GATTServApp_ProcessCharCfg(sensorData2Config, sensorData2, FALSE,
                                  sensorAttrTable, GATT_NUM_ATTRS(sensorAttrTable),
@@ -628,7 +629,7 @@ bStatus_t Movement_setParameter(uint8_t param, uint8_t len, void *value)
     case SENSOR_DATA3:
     if (len == SENSOR_DATA3_LEN)
     {
-      memcpy(sensorData1, value, SENSOR_DATA3_LEN);
+      memcpy(sensorData3, value, SENSOR_DATA3_LEN);
       // See if Notification has been enabled
       ret = GATTServApp_ProcessCharCfg(sensorData3Config, sensorData3, FALSE,
                                  sensorAttrTable, GATT_NUM_ATTRS(sensorAttrTable),
@@ -644,6 +645,10 @@ bStatus_t Movement_setParameter(uint8_t param, uint8_t len, void *value)
       if (len == SENSOR_CONFIG1_LEN)
       {
         memcpy(sensorCfg1, value, SENSOR_CONFIG1_LEN);
+        if(sensorCfg1[0] == 0){
+        	zeroCount++;
+        	asm(" NOP");
+        }
       }
       else
       {
@@ -762,6 +767,8 @@ bStatus_t Movement_getParameter(uint8_t param, void *value)
  *
  * @return      SUCCESS, blePending or Failure
  */
+
+volatile uint8_t readCount = 0;
 static bStatus_t sensor_ReadAttrCB(uint16_t connHandle, gattAttribute_t *pAttr,
                                    uint8_t *pValue, uint16_t *pLen, 
                                    uint16_t offset, uint16_t maxLen,
@@ -769,6 +776,7 @@ static bStatus_t sensor_ReadAttrCB(uint16_t connHandle, gattAttribute_t *pAttr,
 {
   uint16_t uuid;
   bStatus_t status = SUCCESS;
+
 
   // Make sure it's not a blob operation (no attributes in the profile are long)
   if (offset > 0)
@@ -803,8 +811,13 @@ static bStatus_t sensor_ReadAttrCB(uint16_t connHandle, gattAttribute_t *pAttr,
       break;
 
     case SENSOR_CONFIG1_UUID:
+    	readCount++;
       *pLen = SENSOR_CONFIG1_LEN;
       memcpy(pValue, pAttr->pValue, SENSOR_CONFIG1_LEN);
+      if(readCount == 3){
+    	 asm(" NOP");
+      	  readCount = 0;
+      }
       break;
 
     case SENSOR_CONFIG2_UUID:
@@ -852,6 +865,7 @@ static bStatus_t sensor_WriteAttrCB(uint16_t connHandle, gattAttribute_t *pAttr,
   bStatus_t status = SUCCESS;
   uint8_t notifyApp = 0xFF;
   uint16_t uuid;
+  static uint8_t zeroTest = 0;
 
   if (utilExtractUuid16(pAttr,&uuid) == FAILURE) {
     // Invalid handle
@@ -891,6 +905,9 @@ static bStatus_t sensor_WriteAttrCB(uint16_t connHandle, gattAttribute_t *pAttr,
       if (status == SUCCESS)
       {
         memcpy(pAttr->pValue, pValue, SENSOR_CONFIG1_LEN);
+
+        if(*pValue == 0x0C)
+        	zeroTest++;
 
         if (pAttr->pValue == (uint8_t*)&sensorCfg1)
         {

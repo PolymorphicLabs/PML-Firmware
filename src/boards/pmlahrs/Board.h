@@ -73,7 +73,7 @@ extern "C" {
 /* Board specific I2C addresses */
 
 /* Interface #0 */
-#define     Board_HDC1000_ADDR      (0x43)
+#define     Board_HDC1080_ADDR      (0x40)
 //#define     Board_TMP007_ADDR       (0x44)
 //#define     Board_OPT3001_ADDR      (0x45)
 //#define     Board_BMP280_ADDR       (0x77)

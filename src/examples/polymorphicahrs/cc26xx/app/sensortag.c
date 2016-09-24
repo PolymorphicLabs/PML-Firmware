@@ -600,7 +600,7 @@ static void SensorTag_taskFxn(UArg a0, UArg a1)
 
       // Process new data if available
       SensorTagKeys_processEvent();
-      SensorTagMov_processSensorEvent();
+//      SensorTagMov_processSensorEvent();
       SensorTagBatt_processSensorEvent();
     }
 

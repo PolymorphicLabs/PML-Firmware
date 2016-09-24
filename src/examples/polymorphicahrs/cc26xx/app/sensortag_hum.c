@@ -57,7 +57,7 @@
 
 #include "humidityservice.h"
 #include "sensortag_hum.h"
-#include "SensorHdc1000.h"
+#include "SensorHdc1080.h"
 #include "sensortag.h"
 #include "SensorTagTest.h"
 #include "SensorUtil.h"
@@ -186,7 +186,7 @@ void SensorTagHum_init(void)
                           / SENSOR_PERIOD_RESOLUTION, sizeof(uint8_t));
 
   // Initialize the driver
-  SensorHdc1000_init();
+  SensorHdc1080_init();
 }
 
 /*********************************************************************
@@ -303,11 +303,11 @@ static void sensorTaskFxn(UArg a0, UArg a1)
       Data_t data;
 
       // 1. Start temperature measurement
-      SensorHdc1000_start();
+      SensorHdc1080_start();
       DELAY_MS(HUM_DELAY_PERIOD);
 
       // 2. Read data
-      SensorHdc1000_read(&data.v.rawTemp, &data.v.rawHum);
+      SensorHdc1080_read(&data.v.rawTemp, &data.v.rawHum);
 
       // 3. Send data
       Humidity_setParameter(SENSOR_DATA, SENSOR_DATA_LEN, data.a);
