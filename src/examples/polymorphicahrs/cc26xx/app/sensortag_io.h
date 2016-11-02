@@ -97,6 +97,11 @@ extern void SensorTagIO_reset(void);
  */
 extern void SensorTagIO_blinkLed(uint8_t led, uint8_t nBlinks);
 
+/*
+ *  Function to power/depower sensors
+ */
+extern void SensorTagIO_sensorPower(bool enable);
+
 #else
 
 /* IO module not included */

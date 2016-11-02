@@ -116,18 +116,51 @@ bool sensorMs5607Init(void)
 //	delay(3);
 	DELAY_MS(3);
 
-	if (!SENSOR_SELECT())
-		return false;
 
-	for(i = 0; i < 8; i++)
-	{
+
+	//void ReadProm() {
+	//	send_cmd(MS5xxx_CMD_RESET);
+	//	delay(3);
+	//
+	//	for(uint8_t i=0;i<8;i++)
+	//	{
+	//	    C[i]=0x0000;
+	//	    send_cmd(MS5xxx_CMD_PROM_RD+2*i);
+	//	    _Wire->requestFrom(i2caddr, 2);
+	//
+	//	    unsigned int c = _Wire->read();
+	//	    C[i] = (c << 8);
+	//	    c = _Wire->read();
+	//	    C[i] += c;
+	//	    _Wire->endTransmission(true);
+	//	}
+	//
+	//}
+
+
+
+	for(i = 0; i < 8; i++){
+
+
 		C[i]=0x0000;
-		SensorI2C_writeReg(MS5xxx_CMD_PROM_RD+2*i, val, sizeof(val));
+
+		if (!SENSOR_SELECT())
+			return false;
+		SensorI2C_writeReg(MS5xxx_CMD_PROM_RD+2*i, val, 0);
+		SENSOR_DESELECT();
+
+		if (!SENSOR_SELECT())
+			return false;
+		SensorI2C_read(val, 2);
+		SENSOR_DESELECT();
+
 		C[i] = (val[0] << 8) + val[1];
+
+
 
 	}
 
-	SENSOR_DESELECT();
+
 
 
 	return true;
@@ -216,7 +249,7 @@ bool sensorMs5607Read(uint8_t *data)
 //	SENSOR_DESELECT();
 
 
-	unsigned long D1=0, D2=0;
+	uint64_t D1=0, D2=0;
 
 	double dT;
 	double OFF;

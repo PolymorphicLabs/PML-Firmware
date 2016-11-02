@@ -76,8 +76,8 @@ const PIN_Config BoardGpioInitTable[] = {
     Board_LED_G   | PIN_GPIO_OUTPUT_EN | PIN_GPIO_LOW | PIN_PUSHPULL | PIN_DRVSTR_MAX,     /* LED initially off             */
     Board_LED_B   | PIN_GPIO_OUTPUT_EN | PIN_GPIO_LOW | PIN_PUSHPULL | PIN_DRVSTR_MAX,     /* LED initially off             */
     Board_BUTTON   | PIN_INPUT_EN | PIN_PULLUP | PIN_IRQ_BOTHEDGES | PIN_HYSTERESIS,        /* Button is active low          */
-    Board_BNO_INT    | PIN_INPUT_EN | PIN_PULLDOWN | PIN_IRQ_POSEDGE | PIN_HYSTERESIS,        /* MPU_INT is active low         */
-    Board_HDC_INT    | PIN_INPUT_EN | PIN_PULLUP | PIN_IRQ_NEGEDGE |PIN_HYSTERESIS,                            /* TMP_RDY is active high        */
+    Board_SENSOR_PWR    | PIN_GPIO_OUTPUT_EN | PIN_GPIO_LOW | PIN_PUSHPULL | PIN_DRVSTR_MAX,        /* Sensor Power Initially off         */
+    Board_BNO_INT    | PIN_INPUT_EN | PIN_PULLUP | PIN_IRQ_NEGEDGE |PIN_HYSTERESIS,                            /* TMP_RDY is active high        */
     Board_SPI_FLASH_CS | PIN_GPIO_OUTPUT_EN | PIN_GPIO_HIGH | PIN_PUSHPULL | PIN_DRVSTR_MIN,  /* External flash chip select    */
     Board_SPI0_MOSI | PIN_INPUT_EN | PIN_PULLDOWN,                                            /* SPI master out - slave in */
     Board_SPI0_MISO | PIN_INPUT_EN | PIN_PULLDOWN,                                            /* SPI master in - slave out */

@@ -57,6 +57,7 @@
 #include "sensortag.h"
 #include "sensortag_tmp.h"
 #include "sensortag_hum.h"
+#include "sensortag_mov.h"
 #include "sensortag_bar.h"
 
 #ifndef USE_DEFAULT_USER_CFG

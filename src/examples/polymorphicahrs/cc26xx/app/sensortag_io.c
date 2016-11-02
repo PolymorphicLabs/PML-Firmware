@@ -277,6 +277,23 @@ void SensorTagIO_blinkLed(uint8_t led, uint8_t nBlinks)
   }
 }
 
+/*******************************************************************************
+ * @fn      SensorTagIO_sensorPower
+ *
+ * @brief   Enables or disables power for the sensors and LEDs.
+ * @param   enable - true to enable power, false to disable power
+ *
+ * @return  none
+ */
+void SensorTagIO_sensorPower(bool enable)
+{
+	if(enable){
+		PIN_setOutputValue(hGpioPin, Board_SENSOR_PWR, Board_SENSOR_ON);
+	}else{
+		PIN_setOutputValue(hGpioPin, Board_SENSOR_PWR, Board_SENSOR_OFF);
+	}
+}
+
 /*********************************************************************
 * Private functions
 */

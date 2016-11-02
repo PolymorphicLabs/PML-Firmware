@@ -288,6 +288,7 @@ static PIN_Config SensortagAppPinTable[] =
     Board_LED_G       | PIN_GPIO_OUTPUT_EN | PIN_GPIO_LOW | PIN_PUSHPULL | PIN_DRVSTR_MAX,     /* LED initially off             */
     Board_LED_B       | PIN_GPIO_OUTPUT_EN | PIN_GPIO_LOW | PIN_PUSHPULL | PIN_DRVSTR_MAX,     /* LED initially off             */
     Board_BUTTON   | PIN_INPUT_EN | PIN_PULLUP | PIN_IRQ_BOTHEDGES | PIN_HYSTERESIS,        /* Button is active low          */
+	Board_SENSOR_PWR  | PIN_GPIO_OUTPUT_EN | PIN_GPIO_LOW | PIN_PUSHPULL | PIN_DRVSTR_MAX,
 
     PIN_TERMINATE
 };
@@ -387,6 +388,9 @@ static void SensorTag_init(void)
   // Handling of buttons, LED, relay
   hGpioPin = PIN_open(&pinGpioState, SensortagAppPinTable);
   PIN_registerIntCb(hGpioPin, SensorTag_callback);
+
+  //Make sure sensors are powered up for self test.
+  SensorTagIO_sensorPower(true);
 
   // ***************************************************************************
   // N0 STACK API CALLS CAN OCCUR BEFORE THIS CALL TO ICall_registerApp

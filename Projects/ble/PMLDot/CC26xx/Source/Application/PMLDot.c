@@ -154,7 +154,7 @@
 
 // Task configuration
 #define ST_TASK_PRIORITY                      1
-#define ST_TASK_STACK_SIZE                    700
+#define ST_TASK_STACK_SIZE                    1000
 
 // Internal Events for RTOS application
 #define ST_STATE_CHANGE_EVT                   0x0001
@@ -292,7 +292,7 @@ static Queue_Handle hOadQ;
 static const uint8_t devInfoModelNumber[] = "CC2650 PMLDot";
 static const uint8_t devInfoNA[] =          "N.A.";
 static const uint8_t devInfoFirmwareRev[] = FW_VERSION_STR;
-static const uint8_t devInfoMfrName[] =     "Texas Instruments";
+static const uint8_t devInfoMfrName[] =     "Polymorphic Labs";
 static const uint8_t devInfoHardwareRev[] = "PCB 1.2/1.3";
 
 // Pins that are actively used by the application

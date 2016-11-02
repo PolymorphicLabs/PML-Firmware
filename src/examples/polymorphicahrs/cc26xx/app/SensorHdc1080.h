@@ -37,8 +37,8 @@
  *
  *  ============================================================================
  */
-#ifndef SENSOR_HDC1000_H
-#define SENSOR_HDC1000_H
+#ifndef SENSOR_HDC1080_H
+#define SENSOR_HDC1080_H
 
 #ifdef __cplusplus
 extern "C"
@@ -71,4 +71,4 @@ void SensorHdc1080_convert(uint16_t rawTemp, uint16_t rawHum,
 }
 #endif
 
-#endif /* SENSOR_HDC1000_H */
+#endif /* SENSOR_HDC1080_H */

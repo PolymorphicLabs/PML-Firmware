@@ -51,22 +51,22 @@
 * ------------------------------------------------------------------------------
 */
 // Registers
-#define HDC1000_REG_TEMP           0x00 // Temperature
-#define HDC1000_REG_HUM            0x01 // Humidity
-#define HDC1000_REG_CONFIG         0x02 // Configuration
-#define HDC1000_REG_SERID_H        0xFB // Serial ID high
-#define HDC1000_REG_SERID_M        0xFC // Serial ID middle
-#define HDC1000_REG_SERID_L        0xFD // Serial ID low
-#define HDC1000_REG_MANF_ID        0xFE // Manufacturer ID
-#define HDC1000_REG_DEV_ID         0xFF // Device ID
+#define HDC1080_REG_TEMP           0x00 // Temperature
+#define HDC1080_REG_HUM            0x01 // Humidity
+#define HDC1080_REG_CONFIG         0x02 // Configuration
+#define HDC1080_REG_SERID_H        0xFB // Serial ID high
+#define HDC1080_REG_SERID_M        0xFC // Serial ID middle
+#define HDC1080_REG_SERID_L        0xFD // Serial ID low
+#define HDC1080_REG_MANF_ID        0xFE // Manufacturer ID
+#define HDC1080_REG_DEV_ID         0xFF // Device ID
 
 // Fixed values
-#define HDC1000_VAL_MANF_ID        0x5449
-#define HDC1000_VAL_DEV_ID         0x1000
-#define HDC1000_VAL_CONFIG         0x1000 // 14 bit, acquired in sequence
+#define HDC1080_VAL_MANF_ID        0x5449
+#define HDC1080_VAL_DEV_ID         0x1050
+#define HDC1080_VAL_CONFIG         0x1000 // 14 bit, acquired in sequence
 
 // Sensor selection/de-selection
-#define SENSOR_SELECT()     SensorI2C_select(SENSOR_I2C_0,Board_HDC1080_ADDR)
+#define SENSOR_SELECT()     SensorI2C_select(SENSOR_I2C_1,Board_HDC1080_ADDR)
 #define SENSOR_DESELECT()   SensorI2C_deselect()
 
 /* -----------------------------------------------------------------------------
@@ -108,8 +108,8 @@ bool SensorHdc1080_init(void)
     }
 
     // Enable reading data in one operation
-    val = SWAP(HDC1000_VAL_CONFIG);
-    success = SensorI2C_writeReg(HDC1000_REG_CONFIG, (uint8_t*)&val, 2);
+    val = SWAP(HDC1080_VAL_CONFIG);
+    success = SensorI2C_writeReg(HDC1080_REG_CONFIG, (uint8_t*)&val, 2);
 
     SENSOR_DESELECT();
 
@@ -134,7 +134,7 @@ void SensorHdc1080_start(void)
             return;
         }
 
-        val = HDC1000_REG_TEMP;
+        val = HDC1080_REG_TEMP;
         success = SensorI2C_write(&val, sizeof(val));
 
         SENSOR_DESELECT();
@@ -218,18 +218,37 @@ bool SensorHdc1080_test(void)
     uint16_t val;
 
     SENSOR_SELECT();
-
-    // Verify manufacturer ID
-    ST_ASSERT(SensorI2C_readReg(HDC1000_REG_MANF_ID,(uint8_t*)&val,2));
-    val = SWAP(val);
-    ST_ASSERT(val == HDC1000_VAL_MANF_ID);
-
-    // Verify device ID
-    ST_ASSERT(SensorI2C_readReg(HDC1000_REG_DEV_ID,(uint8_t*)&val,2));
-    val = SWAP(val);
-    ST_ASSERT(val == HDC1000_VAL_DEV_ID);
-
+    SensorI2C_writeReg(HDC1080_REG_MANF_ID, 0, 0);
     SENSOR_DESELECT();
+
+    SENSOR_SELECT();
+    SensorI2C_read((uint8_t *)&val, 2);
+    SENSOR_DESELECT();
+
+
+    ST_ASSERT(val == HDC1080_VAL_MANF_ID);
+    SENSOR_SELECT();
+    SensorI2C_writeReg(HDC1080_REG_DEV_ID, 0, 0);
+    SENSOR_DESELECT();
+
+
+
+    SENSOR_SELECT();
+    SensorI2C_read((uint8_t *)&val, 2);
+    SENSOR_DESELECT();
+    ST_ASSERT(val == HDC1080_VAL_DEV_ID);
+
+//    // Verify manufacturer ID
+//    ST_ASSERT(SensorI2C_readReg(HDC1080_REG_MANF_ID,(uint8_t*)&val,2));
+//    val = SWAP(val);
+//    ST_ASSERT(val == HDC1080_VAL_MANF_ID);
+
+//    // Verify device ID
+//    ST_ASSERT(SensorI2C_readReg(HDC1080_REG_DEV_ID,(uint8_t*)&val,2));
+//    val = SWAP(val);
+//    ST_ASSERT(val == HDC1080_VAL_DEV_ID);
+
+//    SENSOR_DESELECT();
 
     return true;
 }
