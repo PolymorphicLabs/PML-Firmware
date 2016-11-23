@@ -74,117 +74,117 @@
 		<link>
 			<name>Application/sensortag.c</name>
 			<type>1</type>
-			<locationURI>copy_PARENT/src/examples/polymorphicdotmove/cc26xx/app/sensortag.c</locationURI>
+			<locationURI>SRC_EX/examples/polymorphicdotmove/cc26xx/app/Application/sensortag.c</locationURI>
 		</link>
 		<link>
 			<name>Application/sensortag.h</name>
 			<type>1</type>
-			<locationURI>copy_PARENT/src/examples/polymorphicdotmove/cc26xx/app/sensortag.h</locationURI>
+			<locationURI>SRC_EX/examples/polymorphicdotmove/cc26xx/app/Application/sensortag.h</locationURI>
 		</link>
 		<link>
 			<name>Application/sensortag_bar.c</name>
 			<type>1</type>
-			<locationURI>copy_PARENT/src/examples/polymorphicdotmove/cc26xx/app/sensortag_bar.c</locationURI>
+			<locationURI>SRC_EX/examples/polymorphicdotmove/cc26xx/app/Application/sensortag_bar.c</locationURI>
 		</link>
 		<link>
 			<name>Application/sensortag_bar.h</name>
 			<type>1</type>
-			<locationURI>copy_PARENT/src/examples/polymorphicdotmove/cc26xx/app/sensortag_bar.h</locationURI>
+			<locationURI>SRC_EX/examples/polymorphicdotmove/cc26xx/app/Application/sensortag_bar.h</locationURI>
 		</link>
 		<link>
 			<name>Application/sensortag_batt.c</name>
 			<type>1</type>
-			<locationURI>copy_PARENT/src/examples/polymorphicdotmove/cc26xx/app/sensortag_batt.c</locationURI>
+			<locationURI>SRC_EX/examples/polymorphicdotmove/cc26xx/app/Application/sensortag_batt.c</locationURI>
 		</link>
 		<link>
 			<name>Application/sensortag_batt.h</name>
 			<type>1</type>
-			<locationURI>copy_PARENT/src/examples/polymorphicdotmove/cc26xx/app/sensortag_batt.h</locationURI>
+			<locationURI>SRC_EX/examples/polymorphicdotmove/cc26xx/app/Application/sensortag_batt.h</locationURI>
 		</link>
 		<link>
 			<name>Application/sensortag_conn_ctrl.c</name>
 			<type>1</type>
-			<locationURI>copy_PARENT/src/examples/polymorphicdotmove/cc26xx/app/sensortag_conn_ctrl.c</locationURI>
+			<locationURI>SRC_EX/examples/polymorphicdotmove/cc26xx/app/Application/sensortag_conn_ctrl.c</locationURI>
 		</link>
 		<link>
 			<name>Application/sensortag_conn_ctrl.h</name>
 			<type>1</type>
-			<locationURI>copy_PARENT/src/examples/polymorphicdotmove/cc26xx/app/sensortag_conn_ctrl.h</locationURI>
+			<locationURI>SRC_EX/examples/polymorphicdotmove/cc26xx/app/Application/sensortag_conn_ctrl.h</locationURI>
 		</link>
 		<link>
 			<name>Application/sensortag_factoryreset.c</name>
 			<type>1</type>
-			<locationURI>copy_PARENT/src/examples/polymorphicdotmove/cc26xx/app/sensortag_factoryreset.c</locationURI>
+			<locationURI>SRC_EX/examples/polymorphicdotmove/cc26xx/app/Application/sensortag_factoryreset.c</locationURI>
 		</link>
 		<link>
 			<name>Application/sensortag_factoryreset.h</name>
 			<type>1</type>
-			<locationURI>copy_PARENT/src/examples/polymorphicdotmove/cc26xx/app/sensortag_factoryreset.h</locationURI>
+			<locationURI>SRC_EX/examples/polymorphicdotmove/cc26xx/app/Application/sensortag_factoryreset.h</locationURI>
 		</link>
 		<link>
 			<name>Application/sensortag_io.c</name>
 			<type>1</type>
-			<locationURI>copy_PARENT/src/examples/polymorphicdotmove/cc26xx/app/sensortag_io.c</locationURI>
+			<locationURI>SRC_EX/examples/polymorphicdotmove/cc26xx/app/Application/sensortag_io.c</locationURI>
 		</link>
 		<link>
 			<name>Application/sensortag_io.h</name>
 			<type>1</type>
-			<locationURI>copy_PARENT/src/examples/polymorphicdotmove/cc26xx/app/sensortag_io.h</locationURI>
+			<locationURI>SRC_EX/examples/polymorphicdotmove/cc26xx/app/Application/sensortag_io.h</locationURI>
 		</link>
 		<link>
 			<name>Application/sensortag_keys.c</name>
 			<type>1</type>
-			<locationURI>copy_PARENT/src/examples/polymorphicdotmove/cc26xx/app/sensortag_keys.c</locationURI>
+			<locationURI>SRC_EX/examples/polymorphicdotmove/cc26xx/app/Application/sensortag_keys.c</locationURI>
 		</link>
 		<link>
 			<name>Application/sensortag_keys.h</name>
 			<type>1</type>
-			<locationURI>copy_PARENT/src/examples/polymorphicdotmove/cc26xx/app/sensortag_keys.h</locationURI>
+			<locationURI>SRC_EX/examples/polymorphicdotmove/cc26xx/app/Application/sensortag_keys.h</locationURI>
 		</link>
 		<link>
 			<name>Application/sensortag_mov.c</name>
 			<type>1</type>
-			<locationURI>copy_PARENT/src/examples/polymorphicdotmove/cc26xx/app/sensortag_mov.c</locationURI>
+			<locationURI>SRC_EX/examples/polymorphicdotmove/cc26xx/app/Application/sensortag_mov.c</locationURI>
 		</link>
 		<link>
 			<name>Application/sensortag_mov.h</name>
 			<type>1</type>
-			<locationURI>copy_PARENT/src/examples/polymorphicdotmove/cc26xx/app/sensortag_mov.h</locationURI>
+			<locationURI>SRC_EX/examples/polymorphicdotmove/cc26xx/app/Application/sensortag_mov.h</locationURI>
 		</link>
 		<link>
 			<name>Application/sensortag_oad.c</name>
 			<type>1</type>
-			<locationURI>copy_PARENT/src/examples/polymorphicdotmove/cc26xx/app/sensortag_oad.c</locationURI>
+			<locationURI>SRC_EX/examples/polymorphicdotmove/cc26xx/app/Application/sensortag_oad.c</locationURI>
 		</link>
 		<link>
 			<name>Application/sensortag_oad.h</name>
 			<type>1</type>
-			<locationURI>copy_PARENT/src/examples/polymorphicdotmove/cc26xx/app/sensortag_oad.h</locationURI>
+			<locationURI>SRC_EX/examples/polymorphicdotmove/cc26xx/app/Application/sensortag_oad.h</locationURI>
 		</link>
 		<link>
 			<name>Application/sensortag_register.c</name>
 			<type>1</type>
-			<locationURI>copy_PARENT/src/examples/polymorphicdotmove/cc26xx/app/sensortag_register.c</locationURI>
+			<locationURI>SRC_EX/examples/polymorphicdotmove/cc26xx/app/Application/sensortag_register.c</locationURI>
 		</link>
 		<link>
 			<name>Application/sensortag_register.h</name>
 			<type>1</type>
-			<locationURI>copy_PARENT/src/examples/polymorphicdotmove/cc26xx/app/sensortag_register.h</locationURI>
+			<locationURI>SRC_EX/examples/polymorphicdotmove/cc26xx/app/Application/sensortag_register.h</locationURI>
 		</link>
 		<link>
 			<name>Application/sensortag_revision.h</name>
 			<type>1</type>
-			<locationURI>copy_PARENT/src/examples/polymorphicdotmove/cc26xx/app/sensortag_revision.h</locationURI>
+			<locationURI>SRC_EX/examples/polymorphicdotmove/cc26xx/app/Application/sensortag_revision.h</locationURI>
 		</link>
 		<link>
 			<name>Application/sensortag_tmp.c</name>
 			<type>1</type>
-			<locationURI>copy_PARENT/src/examples/polymorphicdotmove/cc26xx/app/sensortag_tmp.c</locationURI>
+			<locationURI>SRC_EX/examples/polymorphicdotmove/cc26xx/app/Application/sensortag_tmp.c</locationURI>
 		</link>
 		<link>
 			<name>Application/sensortag_tmp.h</name>
 			<type>1</type>
-			<locationURI>copy_PARENT/src/examples/polymorphicdotmove/cc26xx/app/sensortag_tmp.h</locationURI>
+			<locationURI>SRC_EX/examples/polymorphicdotmove/cc26xx/app/Application/sensortag_tmp.h</locationURI>
 		</link>
 		<link>
 			<name>Application/util.c</name>
@@ -218,6 +218,11 @@
 		</link>
 		<link>
 			<name>Drivers/SPI</name>
+			<type>2</type>
+			<locationURI>virtual:/virtual</locationURI>
+		</link>
+		<link>
+			<name>Drivers/TRNG</name>
 			<type>2</type>
 			<locationURI>virtual:/virtual</locationURI>
 		</link>
@@ -279,7 +284,7 @@
 		<link>
 			<name>Include/gap.h</name>
 			<type>1</type>
-			<locationURI>SRC_EX/inc/gap.h</locationURI>
+			<locationURI>SRC_BLE_CORE/inc/gap.h</locationURI>
 		</link>
 		<link>
 			<name>Include/gapbondmgr.h</name>
@@ -294,12 +299,12 @@
 		<link>
 			<name>Include/gatt.h</name>
 			<type>1</type>
-			<locationURI>SRC_EX/inc/gatt.h</locationURI>
+			<locationURI>SRC_BLE_CORE/inc/gatt.h</locationURI>
 		</link>
 		<link>
 			<name>Include/hci.h</name>
 			<type>1</type>
-			<locationURI>SRC_EX/inc/hci.h</locationURI>
+			<locationURI>SRC_BLE_CORE/inc/hci.h</locationURI>
 		</link>
 		<link>
 			<name>Include/osal_snv.h</name>
@@ -324,12 +329,12 @@
 		<link>
 			<name>PROFILES/barometerservice.c</name>
 			<type>1</type>
-			<locationURI>copy_PARENT/src/examples/polymorphicdotmove/cc26xx/app/barometerservice.c</locationURI>
+			<locationURI>SRC_EX/profiles/sensor_profile/cc26xx/barometerservice.c</locationURI>
 		</link>
 		<link>
 			<name>PROFILES/barometerservice.h</name>
 			<type>1</type>
-			<locationURI>copy_PARENT/src/examples/polymorphicdotmove/cc26xx/app/barometerservice.h</locationURI>
+			<locationURI>SRC_EX/profiles/sensor_profile/cc26xx/barometerservice.h</locationURI>
 		</link>
 		<link>
 			<name>PROFILES/battservice.c</name>
@@ -374,17 +379,17 @@
 		<link>
 			<name>PROFILES/gatt_uuid.c</name>
 			<type>1</type>
-			<locationURI>SRC_EX/host/gatt_uuid.c</locationURI>
+			<locationURI>SRC_BLE_CORE/host/gatt_uuid.c</locationURI>
 		</link>
 		<link>
 			<name>PROFILES/gatt_uuid.h</name>
 			<type>1</type>
-			<locationURI>SRC_EX/inc/gatt_uuid.h</locationURI>
+			<locationURI>SRC_BLE_CORE/inc/gatt_uuid.h</locationURI>
 		</link>
 		<link>
 			<name>PROFILES/gattservapp_util.c</name>
 			<type>1</type>
-			<locationURI>SRC_EX/host/gattservapp_util.c</locationURI>
+			<locationURI>SRC_BLE_CORE/host/gattservapp_util.c</locationURI>
 		</link>
 		<link>
 			<name>PROFILES/humidityservice.c</name>
@@ -419,12 +424,12 @@
 		<link>
 			<name>PROFILES/movementservice.c</name>
 			<type>1</type>
-			<locationURI>copy_PARENT/src/examples/polymorphicdotmove/cc26xx/app/movementservice.c</locationURI>
+			<locationURI>SRC_EX/profiles/sensor_profile/cc26xx/movementservice.c</locationURI>
 		</link>
 		<link>
 			<name>PROFILES/movementservice.h</name>
 			<type>1</type>
-			<locationURI>copy_PARENT/src/examples/polymorphicdotmove/cc26xx/app/movementservice.h</locationURI>
+			<locationURI>SRC_EX/profiles/sensor_profile/cc26xx/movementservice.h</locationURI>
 		</link>
 		<link>
 			<name>PROFILES/oad.c</name>
@@ -479,32 +484,37 @@
 		<link>
 			<name>PROFILES/st_util.c</name>
 			<type>1</type>
-			<locationURI>copy_PARENT/src/examples/polymorphicdotmove/cc26xx/app/st_util.c</locationURI>
+			<locationURI>SRC_EX/profiles/sensor_profile/cc26xx/st_util.c</locationURI>
 		</link>
 		<link>
 			<name>PROFILES/st_util.h</name>
 			<type>1</type>
-			<locationURI>copy_PARENT/src/examples/polymorphicdotmove/cc26xx/app/st_util.h</locationURI>
+			<locationURI>SRC_EX/profiles/sensor_profile/cc26xx/st_util.h</locationURI>
 		</link>
 		<link>
 			<name>Startup/board.c</name>
 			<type>1</type>
-			<locationURI>copy_PARENT/src/target/board.c</locationURI>
+			<locationURI>SRC_EX/target/board.c</locationURI>
 		</link>
 		<link>
 			<name>Startup/board.h</name>
 			<type>1</type>
-			<locationURI>copy_PARENT/src/target/board.h</locationURI>
+			<locationURI>SRC_COMMON/hal/src/target/board.h</locationURI>
+		</link>
+		<link>
+			<name>Startup/ccfg_app_ble.c</name>
+			<type>1</type>
+			<locationURI>PARENT-2-ORG_PROJ_DIR/ccs/config/ccfg_app_ble.c</locationURI>
 		</link>
 		<link>
 			<name>Startup/main.c</name>
 			<type>1</type>
-			<locationURI>copy_PARENT/src/examples/polymorphicdotmove/cc26xx/app/main.c</locationURI>
+			<locationURI>SRC_EX/examples/polymorphicdotmove/cc26xx/app/Startup/main.c</locationURI>
 		</link>
 		<link>
 			<name>TOOLS/app_ble.cfg</name>
 			<type>1</type>
-			<locationURI>copy_PARENT1/ccs/config/app_ble.cfg</locationURI>
+			<locationURI>PARENT-2-ORG_PROJ_DIR/ccs/config/app_ble.cfg</locationURI>
 		</link>
 		<link>
 			<name>TOOLS/cc26xx_app.cmd</name>
@@ -517,19 +527,14 @@
 			<locationURI>SRC_EX/common/cc26xx/ccs/cc26xx_app_oad.cmd</locationURI>
 		</link>
 		<link>
-			<name>TOOLS/ccfg_app_ble.c</name>
-			<type>1</type>
-			<locationURI>copy_PARENT1/ccs/config/ccfg_app_ble.c</locationURI>
-		</link>
-		<link>
 			<name>TOOLS/ccs_compiler_defines.bcfg</name>
 			<type>1</type>
-			<locationURI>copy_PARENT1/ccs/config/ccs_compiler_defines.bcfg</locationURI>
+			<locationURI>PARENT-2-ORG_PROJ_DIR/ccs/config/ccs_compiler_defines.bcfg</locationURI>
 		</link>
 		<link>
 			<name>TOOLS/ccs_linker_defines.cmd</name>
 			<type>1</type>
-			<locationURI>copy_PARENT1/ccs/config/ccs_linker_defines.cmd</locationURI>
+			<locationURI>PARENT-2-ORG_PROJ_DIR/ccs/config/ccs_linker_defines.cmd</locationURI>
 		</link>
 		<link>
 			<name>Drivers/ECC/ECCROMCC26XX.c</name>
@@ -577,14 +582,14 @@
 			<locationURI>TI_RTOS_DRIVERS_BASE/ti/drivers/pin/PINCC26XX.h</locationURI>
 		</link>
 		<link>
-			<name>Drivers/RF/RF.c</name>
-			<type>1</type>
-			<locationURI>TI_RTOS_DRIVERS_BASE/ti/drivers/rf/RF.c</locationURI>
-		</link>
-		<link>
 			<name>Drivers/RF/RF.h</name>
 			<type>1</type>
 			<locationURI>TI_RTOS_DRIVERS_BASE/ti/drivers/rf/RF.h</locationURI>
+		</link>
+		<link>
+			<name>Drivers/RF/RFCC26XX_singleMode.c</name>
+			<type>1</type>
+			<locationURI>TI_RTOS_DRIVERS_BASE/ti/drivers/rf/RFCC26XX_singleMode.c</locationURI>
 		</link>
 		<link>
 			<name>Drivers/SPI/SPI.c</name>
@@ -605,6 +610,16 @@
 			<name>Drivers/SPI/SPICC26XXDMA.h</name>
 			<type>1</type>
 			<locationURI>TI_RTOS_DRIVERS_BASE/ti/drivers/spi/SPICC26XXDMA.h</locationURI>
+		</link>
+		<link>
+			<name>Drivers/TRNG/TRNGCC26XX.c</name>
+			<type>1</type>
+			<locationURI>SRC_COMMON/hal/src/target/_common/TRNGCC26XX.c</locationURI>
+		</link>
+		<link>
+			<name>Drivers/TRNG/TRNGCC26XX.h</name>
+			<type>1</type>
+			<locationURI>SRC_COMMON/hal/src/target/_common/TRNGCC26XX.h</locationURI>
 		</link>
 		<link>
 			<name>Drivers/UDMA/UDMACC26XX.c</name>
@@ -639,22 +654,32 @@
 		<link>
 			<name>Middleware/sensors/SensorMpu9250.c</name>
 			<type>1</type>
-			<locationURI>copy_PARENT/src/examples/polymorphicdotmove/cc26xx/app/SensorMpu9250.c</locationURI>
+			<locationURI>SRC_EX/examples/polymorphicdotmove/cc26xx/app/Middleware/sensors/SensorMpu9250.c</locationURI>
 		</link>
 		<link>
 			<name>Middleware/sensors/SensorMpu9250.h</name>
 			<type>1</type>
-			<locationURI>copy_PARENT/src/examples/polymorphicdotmove/cc26xx/app/SensorMpu9250.h</locationURI>
+			<locationURI>SRC_EX/examples/polymorphicdotmove/cc26xx/app/Middleware/sensors/SensorMpu9250.h</locationURI>
+		</link>
+		<link>
+			<name>Middleware/sensors/SensorMs5607.c</name>
+			<type>1</type>
+			<locationURI>SRC_EX/examples/polymorphicdotmove/cc26xx/app/Middleware/sensors/SensorMs5607.c</locationURI>
+		</link>
+		<link>
+			<name>Middleware/sensors/SensorMs5607.h</name>
+			<type>1</type>
+			<locationURI>SRC_EX/examples/polymorphicdotmove/cc26xx/app/Middleware/sensors/SensorMs5607.h</locationURI>
 		</link>
 		<link>
 			<name>Middleware/sensors/SensorTmp007.c</name>
 			<type>1</type>
-			<locationURI>copy_PARENT/src/examples/polymorphicdotmove/cc26xx/app/SensorTmp007.c</locationURI>
+			<locationURI>SRC_EX/examples/polymorphicdotmove/cc26xx/app/Middleware/sensors/SensorTmp007.c</locationURI>
 		</link>
 		<link>
 			<name>Middleware/sensors/SensorTmp007.h</name>
 			<type>1</type>
-			<locationURI>copy_PARENT/src/examples/polymorphicdotmove/cc26xx/app/SensorTmp007.h</locationURI>
+			<locationURI>SRC_EX/examples/polymorphicdotmove/cc26xx/app/Middleware/sensors/SensorTmp007.h</locationURI>
 		</link>
 		<link>
 			<name>Middleware/sensors/SensorUtil.c</name>
@@ -667,74 +692,52 @@
 			<locationURI>TI_RTOS_DRIVERS_BASE/ti/mw/sensors/SensorUtil.h</locationURI>
 		</link>
 		<link>
-			<name>Middleware/sensors/sensor_ms5607.c</name>
-			<type>1</type>
-			<locationURI>copy_PARENT/src/examples/polymorphicdotmove/cc26xx/app/sensor_ms5607.c</locationURI>
-		</link>
-		<link>
-			<name>Middleware/sensors/sensor_ms5607.h</name>
-			<type>1</type>
-			<locationURI>copy_PARENT/src/examples/polymorphicdotmove/cc26xx/app/sensor_ms5607.h</locationURI>
-		</link>
-		<link>
 			<name>Middleware/sensortag/SensorTagTest.c</name>
 			<type>1</type>
-			<locationURI>copy_PARENT/src/examples/polymorphicdotmove/cc26xx/app/SensorTagTest.c</locationURI>
+			<locationURI>SRC_EX/examples/polymorphicdotmove/cc26xx/app/Middleware/polymorphicdotmove/SensorTagTest.c</locationURI>
 		</link>
 		<link>
 			<name>Middleware/sensortag/SensorTagTest.h</name>
 			<type>1</type>
-			<locationURI>copy_PARENT/src/examples/polymorphicdotmove/cc26xx/app/SensorTagTest.h</locationURI>
+			<locationURI>SRC_EX/examples/polymorphicdotmove/cc26xx/app/Middleware/polymorphicdotmove/SensorTagTest.h</locationURI>
 		</link>
 	</linkedResources>
 	<variableList>
 		<variable>
-			<name>BLE_SDK_LOC</name>
-			<value>file:/C:/ti/simplelink/ble_sdk_2_02_00_31</value>
-		</variable>
-		<variable>
 			<name>CC26XXWARE</name>
-			<value>file:/C:/ti/tirtos_cc13xx_cc26xx_2_18_00_03/products/cc26xxware_2_23_03_17162</value>
+			<value>file:/C:/ti/tirtos_cc13xx_cc26xx_2_20_01_08/products/cc26xxware_2_24_02_17393</value>
 		</variable>
 		<variable>
 			<name>ORG_PROJ_DIR</name>
 			<value>$%7BPROJECT_LOC%7D</value>
 		</variable>
 		<variable>
-			<name>PML_FIRMWARE_LOC</name>
-			<value>$%7BPARENT-5-PROJECT_LOC%7D</value>
+			<name>PML_FIRMWARE_BASE</name>
+			<value>file:/C:/ti/simplelink/PML-Firmware</value>
 		</variable>
 		<variable>
 			<name>ROM</name>
-			<value>$%7BBLE_SDK_LOC%7D/src/rom</value>
+			<value>$%7BPML_FIRMWARE_BASE%7D/src/rom</value>
 		</variable>
 		<variable>
 			<name>SRC_BLE_CORE</name>
-			<value>$%7BBLE_SDK_LOC%7D/src</value>
+			<value>$%7BPML_FIRMWARE_BASE%7D/src</value>
 		</variable>
 		<variable>
 			<name>SRC_COMMON</name>
-			<value>$%7BBLE_SDK_LOC%7D/src/components</value>
+			<value>$%7BPML_FIRMWARE_BASE%7D/src/components</value>
 		</variable>
 		<variable>
 			<name>SRC_EX</name>
-			<value>$%7BBLE_SDK_LOC%7D/src</value>
+			<value>$%7BPARENT-5-ORG_PROJ_DIR%7D/src</value>
 		</variable>
 		<variable>
 			<name>TI_RTOS_DRIVERS_BASE</name>
-			<value>file:/C:/ti/tirtos_cc13xx_cc26xx_2_18_00_03/products/tidrivers_cc13xx_cc26xx_2_16_01_13/packages</value>
+			<value>file:/C:/ti/tirtos_cc13xx_cc26xx_2_20_01_08/products/tidrivers_cc13xx_cc26xx_2_20_01_10/packages</value>
 		</variable>
 		<variable>
 			<name>TOOLS_BLE</name>
-			<value>$%7BBLE_SDK_LOC%7D/tools</value>
-		</variable>
-		<variable>
-			<name>copy_PARENT</name>
-			<value>$%7BTI_PRODUCTS_DIR%7D/simplelink/PML-Firmware</value>
-		</variable>
-		<variable>
-			<name>copy_PARENT1</name>
-			<value>$%7Bcopy_PARENT%7D/examples/pmldotmove/pmldotmove</value>
+			<value>$%7BPML_FIRMWARE_BASE%7D/tools</value>
 		</variable>
 	</variableList>
 </projectDescription>

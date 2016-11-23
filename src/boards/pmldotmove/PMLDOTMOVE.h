@@ -100,6 +100,17 @@ extern const PIN_Config BoardGpioInitTable[];
 #define Board_SPI0_CLK              IOID_14
 
 
+/* PWM outputs */
+#define Board_PWMPIN0                       PIN_UNASSIGNED
+#define Board_PWMPIN1                       PIN_UNASSIGNED
+#define Board_PWMPIN2                       PIN_UNASSIGNED
+#define Board_PWMPIN3                       PIN_UNASSIGNED
+#define Board_PWMPIN4                       PIN_UNASSIGNED
+#define Board_PWMPIN5                       PIN_UNASSIGNED
+#define Board_PWMPIN6                       PIN_UNASSIGNED
+#define Board_PWMPIN7                       PIN_UNASSIGNED
+
+
 /** ============================================================================
  *  Instance identifiers
  *  ==========================================================================*/
@@ -112,6 +123,28 @@ extern const PIN_Config BoardGpioInitTable[];
 #define Board_SPI1                  CC2650STK_SPI1
 /* Generic UART instance identifiers */
 #define Board_UART                  CC2650STK_UART0
+/* Generic Crypto instance identifiers */
+#define Board_CRYPTO                CC2650STK_CRYPTO0
+/* Generic TRNG instance identiifer */
+#define Board_TRNG                  CC2650STK_TRNG0
+/* Generic GPTimer instance identifiers */
+#define Board_GPTIMER0A             CC2650STK_GPTIMER0A
+#define Board_GPTIMER0B             CC2650STK_GPTIMER0B
+#define Board_GPTIMER1A             CC2650STK_GPTIMER1A
+#define Board_GPTIMER1B             CC2650STK_GPTIMER1B
+#define Board_GPTIMER2A             CC2650STK_GPTIMER2A
+#define Board_GPTIMER2B             CC2650STK_GPTIMER2B
+#define Board_GPTIMER3A             CC2650STK_GPTIMER3A
+#define Board_GPTIMER3B             CC2650STK_GPTIMER3B
+/* Generic PWM instance identifiers */
+#define Board_PWM0                  CC2650STK_PWM0
+#define Board_PWM1                  CC2650STK_PWM1
+#define Board_PWM2                  CC2650STK_PWM2
+#define Board_PWM3                  CC2650STK_PWM3
+#define Board_PWM4                  CC2650STK_PWM4
+#define Board_PWM5                  CC2650STK_PWM5
+#define Board_PWM6                  CC2650STK_PWM6
+#define Board_PWM7                  CC2650STK_PWM7
 
 
 /** ============================================================================
@@ -159,6 +192,15 @@ typedef enum CC2650STK_SPIName {
 } CC2650STK_SPIName;
 
 /*!
+ *  @def    CC2650STK_TRNGName
+ *  @brief  Enum of TRNG names on the board
+ */
+typedef enum CC2650STK_TRNGName {
+    CC2650STK_TRNG0 = 0,
+    CC2650STK_TRNGCOUNT
+} CC2650STK_TRNGName;
+
+/*!
  *  @def    CC2650STK_UARTName
  *  @brief  Enum of UARTs on the CC2650 dev board
  */
@@ -177,6 +219,53 @@ typedef enum CC2650STK_UdmaName {
 
     CC2650STK_UDMACOUNT
 } CC2650STK_UdmaName;
+
+/*!
+ *  @def    CC2650STK_GPTimerName
+ *  @brief  Enum of GPTimer parts
+ */
+typedef enum CC2650STK_GPTimerName
+{
+    CC2650STK_GPTIMER0A = 0,
+    CC2650STK_GPTIMER0B,
+    CC2650STK_GPTIMER1A,
+    CC2650STK_GPTIMER1B,
+    CC2650STK_GPTIMER2A,
+    CC2650STK_GPTIMER2B,
+    CC2650STK_GPTIMER3A,
+    CC2650STK_GPTIMER3B,
+    CC2650STK_GPTIMERPARTSCOUNT
+} CC2650STK_GPTimerName;
+
+/*!
+ *  @def    CC2650STK_GPTimers
+ *  @brief  Enum of GPTimers
+ */
+typedef enum CC2650STK_GPTimers
+{
+    CC2650STK_GPTIMER0 = 0,
+    CC2650STK_GPTIMER1,
+    CC2650STK_GPTIMER2,
+    CC2650STK_GPTIMER3,
+    CC2650STK_GPTIMERCOUNT
+} CC2650STK_GPTimers;
+
+/*!
+ *  @def    CC2650STK_PWM
+ *  @brief  Enum of PWM outputs on the board
+ */
+typedef enum CC2650STK_PWM
+{
+    CC2650STK_PWM0 = 0,
+    CC2650STK_PWM1,
+    CC2650STK_PWM2,
+    CC2650STK_PWM3,
+    CC2650STK_PWM4,
+    CC2650STK_PWM5,
+    CC2650STK_PWM6,
+    CC2650STK_PWM7,
+    CC2650STK_PWMCOUNT
+} CC2650STK_PWM;
 
 #ifdef __cplusplus
 }

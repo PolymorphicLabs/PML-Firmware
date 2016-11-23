@@ -98,52 +98,52 @@
 		<link>
 			<name>INCLUDE/att.h</name>
 			<type>1</type>
-			<locationURI>SRC_EX/inc/att.h</locationURI>
+			<locationURI>SRC_BLE_CORE/inc/att.h</locationURI>
 		</link>
 		<link>
 			<name>INCLUDE/gap.h</name>
 			<type>1</type>
-			<locationURI>SRC_EX/inc/gap.h</locationURI>
+			<locationURI>SRC_BLE_CORE/inc/gap.h</locationURI>
 		</link>
 		<link>
 			<name>INCLUDE/gatt.h</name>
 			<type>1</type>
-			<locationURI>SRC_EX/inc/gatt.h</locationURI>
+			<locationURI>SRC_BLE_CORE/inc/gatt.h</locationURI>
 		</link>
 		<link>
 			<name>INCLUDE/gatt_uuid.h</name>
 			<type>1</type>
-			<locationURI>SRC_EX/inc/gatt_uuid.h</locationURI>
+			<locationURI>SRC_BLE_CORE/inc/gatt_uuid.h</locationURI>
 		</link>
 		<link>
 			<name>INCLUDE/hci.h</name>
 			<type>1</type>
-			<locationURI>SRC_EX/inc/hci.h</locationURI>
+			<locationURI>SRC_BLE_CORE/inc/hci.h</locationURI>
 		</link>
 		<link>
 			<name>INCLUDE/l2cap.h</name>
 			<type>1</type>
-			<locationURI>SRC_EX/inc/l2cap.h</locationURI>
+			<locationURI>SRC_BLE_CORE/inc/l2cap.h</locationURI>
 		</link>
 		<link>
 			<name>INCLUDE/linkdb.h</name>
 			<type>1</type>
-			<locationURI>SRC_EX/inc/linkdb.h</locationURI>
+			<locationURI>SRC_BLE_CORE/inc/linkdb.h</locationURI>
 		</link>
 		<link>
 			<name>INCLUDE/ll.h</name>
 			<type>1</type>
-			<locationURI>SRC_EX/controller/cc26xx/inc/ll.h</locationURI>
+			<locationURI>SRC_BLE_CORE/controller/cc26xx/inc/ll.h</locationURI>
 		</link>
 		<link>
 			<name>INCLUDE/sm.h</name>
 			<type>1</type>
-			<locationURI>SRC_EX/inc/sm.h</locationURI>
+			<locationURI>SRC_BLE_CORE/inc/sm.h</locationURI>
 		</link>
 		<link>
 			<name>LIB/lib_linker.cmd</name>
 			<type>1</type>
-			<locationURI>copy_PARENT/ccs/config/lib_linker.cmd</locationURI>
+			<locationURI>PARENT-2-ORG_PROJ_DIR/ccs/config/lib_linker.cmd</locationURI>
 		</link>
 		<link>
 			<name>NPI/npi.c</name>
@@ -263,17 +263,17 @@
 		<link>
 			<name>PROFILES/gattservapp_util.c</name>
 			<type>1</type>
-			<locationURI>SRC_EX/host/gattservapp_util.c</locationURI>
+			<locationURI>SRC_BLE_CORE/host/gattservapp_util.c</locationURI>
+		</link>
+		<link>
+			<name>PROFILES/sm_ecc.c</name>
+			<type>1</type>
+			<locationURI>SRC_BLE_CORE/host/sm_ecc.c</locationURI>
 		</link>
 		<link>
 			<name>Startup/ble_user_config.c</name>
 			<type>1</type>
 			<locationURI>SRC_EX/icall/stack/ble_user_config.c</locationURI>
-		</link>
-		<link>
-			<name>Startup/common_rom_init.c</name>
-			<type>1</type>
-			<locationURI>SRC_EX/rom/common_rom_init.c</locationURI>
 		</link>
 		<link>
 			<name>Startup/icall_startup.c</name>
@@ -283,12 +283,12 @@
 		<link>
 			<name>Startup/osal_icall_ble.c</name>
 			<type>1</type>
-			<locationURI>SRC_EX/examples/sensortag/cc26xx/stack/osal_icall_ble.c</locationURI>
+			<locationURI>SRC_EX/examples/polymorphicdotmove/cc26xx/stack/osal_icall_ble.c</locationURI>
 		</link>
 		<link>
-			<name>Startup/rom_init.c</name>
+			<name>Startup/rom_jt.c</name>
 			<type>1</type>
-			<locationURI>SRC_EX/rom/rom_init.c</locationURI>
+			<locationURI>SRC_BLE_CORE/rom/rom_jt.c</locationURI>
 		</link>
 		<link>
 			<name>TOOLS/build_components.opt</name>
@@ -303,12 +303,12 @@
 		<link>
 			<name>TOOLS/ccs_compiler_defines.bcfg</name>
 			<type>1</type>
-			<locationURI>copy_PARENT/ccs/config/ccs_compiler_defines.bcfg</locationURI>
+			<locationURI>PARENT-2-ORG_PROJ_DIR/ccs/config/ccs_compiler_defines.bcfg</locationURI>
 		</link>
 		<link>
 			<name>TOOLS/ccs_linker_defines.cmd</name>
 			<type>1</type>
-			<locationURI>copy_PARENT/ccs/config/ccs_linker_defines.cmd</locationURI>
+			<locationURI>PARENT-2-ORG_PROJ_DIR/ccs/config/ccs_linker_defines.cmd</locationURI>
 		</link>
 		<link>
 			<name>TOOLS/onboard.c</name>
@@ -434,47 +434,43 @@
 	<variableList>
 		<variable>
 			<name>BIOS_BASE</name>
-			<value>file:/C:/ti/tirtos_cc13xx_cc26xx_2_18_00_03/products/bios_6_45_02_31/packages</value>
-		</variable>
-		<variable>
-			<name>BLE_SDK_LOC</name>
-			<value>file:/C:/ti/simplelink/ble_sdk_2_02_00_31</value>
+			<value>file:/C:/ti/tirtos_cc13xx_cc26xx_2_20_01_08/products/bios_6_46_01_38/packages</value>
 		</variable>
 		<variable>
 			<name>CC26XXWARE</name>
-			<value>file:/C:/ti/tirtos_cc13xx_cc26xx_2_18_00_03/products/cc26xxware_2_23_03_17162</value>
+			<value>file:/C:/ti/tirtos_cc13xx_cc26xx_2_20_01_08/products/cc26xxware_2_24_02_17393</value>
 		</variable>
 		<variable>
 			<name>ORG_PROJ_DIR</name>
 			<value>$%7BPROJECT_LOC%7D</value>
 		</variable>
 		<variable>
+			<name>PML_FIRMWARE_BASE</name>
+			<value>file:/C:/ti/simplelink/PML-Firmware</value>
+		</variable>
+		<variable>
 			<name>ROM</name>
-			<value>$%7BBLE_SDK_LOC%7D/src/rom</value>
+			<value>$%7BPML_FIRMWARE_BASE%7D/src/rom</value>
 		</variable>
 		<variable>
 			<name>SRC_BLE_CORE</name>
-			<value>$%7BBLE_SDK_LOC%7D/src</value>
+			<value>$%7BPML_FIRMWARE_BASE%7D/src</value>
 		</variable>
 		<variable>
 			<name>SRC_COMMON</name>
-			<value>$%7BBLE_SDK_LOC%7D/src/components</value>
+			<value>$%7BPML_FIRMWARE_BASE%7D/src/components</value>
 		</variable>
 		<variable>
 			<name>SRC_EX</name>
-			<value>$%7BBLE_SDK_LOC%7D/src</value>
+			<value>$%7BPARENT-5-ORG_PROJ_DIR%7D/src</value>
 		</variable>
 		<variable>
 			<name>TI_RTOS_DRIVERS_BASE</name>
-			<value>file:/C:/ti/tirtos_cc13xx_cc26xx_2_18_00_03/products/tidrivers_cc13xx_cc26xx_2_16_01_13/packages</value>
+			<value>file:/C:/ti/tirtos_cc13xx_cc26xx_2_20_01_08/products/tidrivers_cc13xx_cc26xx_2_20_01_10/packages</value>
 		</variable>
 		<variable>
 			<name>TOOLS_BLE</name>
-			<value>$%7BBLE_SDK_LOC%7D/tools</value>
-		</variable>
-		<variable>
-			<name>copy_PARENT</name>
-			<value>$%7BTI_PRODUCTS_DIR%7D/simplelink/PML-Firmware/examples/pmlahrs/pmlahrs</value>
+			<value>$%7BPML_FIRMWARE_BASE%7D/tools</value>
 		</variable>
 	</variableList>
 </projectDescription>
